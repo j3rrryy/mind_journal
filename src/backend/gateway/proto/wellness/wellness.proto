@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package wellness;
+
+service Wellness {
+    rpc UpsertRecord(UpsertRecordRequest) returns (google.protobuf.Empty);
+    rpc RecordList(Month) returns (RecordListResponse);
+    rpc DeleteAll(UserId) returns (google.protobuf.Empty);
+    rpc Dashboard(DashboardRequest) returns (DashboardResponse);
+    rpc Analytics(UserId) returns (AnalyticsResponse);
+    rpc Recommendations(UserId) returns (RecommendationsResponse);
+}
+
+message UpsertRecordRequest {
+    string user_id = 1;
+    google.protobuf.Timestamp date = 2;
+    Metrics metrics = 3;
+}
+
+message Metrics {
+    uint32 mood = 1;
+    float sleep_hours = 2;
+    uint32 activity = 3;
+    uint32 stress = 4;
+    uint32 energy = 5;
+    uint32 focus = 6;
+}
+
+message Month {
+    string user_id = 1;
+    uint32 year = 2;
+    uint32 month = 3;
+}
+
+message RecordListResponse { repeated RecordInfo records = 1; }
+
+message RecordInfo {
+    google.protobuf.Timestamp date = 1;
+    Metrics metrics = 2;
+}
+
+message UserId { string user_id = 1; }
+
+message DashboardRequest {
+    string user_id = 1;
+    google.protobuf.Timestamp client_date = 2;
+}
+
+message DashboardResponse {
+    message WeeklyAverages {
+        float mood = 1;
+        float sleep_hours = 2;
+        float activity = 3;
+        float stress = 4;
+        float energy = 5;
+        float focus = 6;
+        map<string, float> changes = 7;
+    }
+
+    Metrics today = 1;
+    WeeklyAverages week = 2;
+}
+
+message AnalyticsResponse {
+    message PeriodAnalytics {
+        string period = 1;
+        FeatureImportance feature_importance = 2;
+        repeated ActionItem insights = 3;
+        google.protobuf.Timestamp generated_at = 4;
+    }
+
+    message FeatureImportance {
+        float sleep_hours = 1;
+        float activity = 2;
+        float stress = 3;
+        float energy = 4;
+        float focus = 5;
+    }
+
+    repeated PeriodAnalytics analytics = 1;
+}
+
+message ActionItem {
+    string key = 1;
+    map<string, float> parameters = 2;
+    string priority = 3;
+}
+
+message RecommendationsResponse {
+    repeated ActionItem recommendations = 1;
+    google.protobuf.Timestamp generated_at = 2;
+}

@@ -1,0 +1,45 @@
+from grpc import StatusCode
+
+
+class BaseAppException(Exception):
+    status_code: StatusCode
+    details: str
+
+
+class DatabaseException(BaseAppException):
+    status_code = StatusCode.INTERNAL
+
+    def __init__(self, exc: Exception):
+        self.details = f"Internal database error: {exc}"
+
+
+class UserAlreadyExistsException(BaseAppException):
+    status_code = StatusCode.ALREADY_EXISTS
+    details = "User already exists"
+
+
+class TokenAlreadyExistsException(BaseAppException):
+    status_code = StatusCode.ALREADY_EXISTS
+    details = "Token already exists"
+
+
+class EmailHasAlreadyBeenConfirmedException(BaseAppException):
+    status_code = StatusCode.ALREADY_EXISTS
+    details = "Email has already been confirmed"
+
+
+class EmailAddressIsAlreadyInUseException(BaseAppException):
+    status_code = StatusCode.ALREADY_EXISTS
+    details = "Email address is already in use"
+
+
+class SessionNotFoundException(BaseAppException):
+    status_code = StatusCode.NOT_FOUND
+    details = "Session not found"
+
+
+class UnauthenticatedException(BaseAppException):
+    status_code = StatusCode.UNAUTHENTICATED
+
+    def __init__(self, details: str):
+        self.details = details

@@ -1,0 +1,13 @@
+.vscode/
+/src/**/.env
+/src/**/.env.frontend
+/src/**/.coverage
+/dev/.env
+/dev/.env.frontend
+/dev/redis.conf
+/prod/.env
+/prod/.env.frontend
+/prod/redis.conf
+/prod/docker-compose.cert.yml
+/prod/nginx.conf
+.DS_Store

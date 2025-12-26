@@ -1,0 +1,26 @@
+import os
+
+
+class Settings:
+    POSTGRES_DRIVER = "postgresql+asyncpg"
+    POSTGRES_DB = os.environ["POSTGRES_DB"]
+    POSTGRES_USER = os.environ["POSTGRES_USER"]
+    POSTGRES_PASSWORD = os.environ["POSTGRES_PASSWORD"]
+    POSTGRES_HOST = os.environ["POSTGRES_HOST"]
+    POSTGRES_PORT = int(os.environ["POSTGRES_PORT"])
+
+    REDIS_DB = int(os.environ["REDIS_DB"])
+    REDIS_USER = os.environ["REDIS_USER"]
+    REDIS_PASSWORD = os.environ["REDIS_PASSWORD"]
+    REDIS_HOST = os.environ["REDIS_HOST"]
+    REDIS_PORT = int(os.environ["REDIS_PORT"])
+
+    MINIMUM_SIGNIFICANT_CHANGE = 0.5
+
+    GRPC_SERVER_ADDRESS = "[::]:50051"
+    GRPC_SERVER_MAXIMUM_CONCURRENT_RPCS = 200
+
+    MONITORING_SERVER_HOST = "0.0.0.0"
+    MONITORING_SERVER_PORT = 8000
+    MONITORING_SERVER_LIMIT_CONCURRENCY = 50
+    MONITORING_SERVER_LIMIT_MAX_REQUESTS = 10000

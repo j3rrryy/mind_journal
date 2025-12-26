@@ -1,0 +1,130 @@
+from unittest.mock import ANY, AsyncMock, MagicMock, call, patch
+
+import grpc
+import pytest
+from py_async_grpc_prometheus.prometheus_async_server_interceptor import (
+    PromAsyncServerInterceptor,
+)
+
+import main
+from controller import AuthController
+from proto import AuthServicer
+from settings import Settings
+from utils import ExceptionInterceptor
+
+
+@pytest.mark.asyncio
+@patch("main.grpc.aio.server")
+@patch("main.add_AuthServicer_to_server")
+async def test_start_grpc_server(mock_add_servicer, mock_grpc_server):
+    mock_server_instance = AsyncMock(spec=grpc.aio.Server)
+    mock_grpc_server.return_value = mock_server_instance
+
+    await main.start_grpc_server(MagicMock(spec=AuthController))
+
+    mock_grpc_server.assert_called_once_with(
+        interceptors=ANY,
+        options=[
+            ("grpc.keepalive_time_ms", 60000),
+            ("grpc.keepalive_timeout_ms", 10000),
+            ("grpc.keepalive_permit_without_calls", 1),
+        ],
+        maximum_concurrent_rpcs=Settings.GRPC_SERVER_MAXIMUM_CONCURRENT_RPCS,
+        compression=grpc.Compression.Deflate,
+    )
+    _, kwargs = mock_grpc_server.call_args
+    assert len(kwargs["interceptors"]) == 2
+    assert isinstance(kwargs["interceptors"][0], PromAsyncServerInterceptor)
+    assert isinstance(kwargs["interceptors"][1], ExceptionInterceptor)
+    args, _ = mock_add_servicer.call_args
+    assert len(args) == 2
+    assert isinstance(args[0], AuthServicer)
+    assert isinstance(args[1], grpc.aio.Server)
+    mock_server_instance.add_insecure_port.assert_called_once_with(
+        Settings.GRPC_SERVER_ADDRESS
+    )
+    mock_server_instance.start.assert_awaited_once()
+    mock_server_instance.wait_for_termination.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+@patch("main.MonitoringApp")
+@patch("main.Config")
+@patch("main.Server")
+async def test_start_monitoring_server(mock_server, mock_config, mock_monitoring_app):
+    mock_app = MagicMock()
+    mock_monitoring_app.return_value = mock_app
+    mock_config_instance = MagicMock()
+    mock_config.return_value = mock_config_instance
+    mock_server_instance = AsyncMock()
+    mock_server.return_value = mock_server_instance
+    mock_is_ready = MagicMock()
+
+    await main.start_monitoring_server(mock_is_ready)
+
+    mock_monitoring_app.assert_called_once()
+    mock_config.assert_called_once_with(
+        app=mock_app,
+        loop="uvloop",
+        host=Settings.MONITORING_SERVER_HOST,
+        port=Settings.MONITORING_SERVER_PORT,
+        limit_concurrency=Settings.MONITORING_SERVER_LIMIT_CONCURRENCY,
+        limit_max_requests=Settings.MONITORING_SERVER_LIMIT_MAX_REQUESTS,
+    )
+    mock_server.assert_called_once_with(mock_config_instance)
+    mock_server_instance.serve.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+@patch("main.setup_logging")
+@patch("main.ServiceFactory")
+@patch("main.start_grpc_server")
+@patch("main.start_monitoring_server")
+@patch("main.logger")
+async def test_main(
+    mock_logger, mock_monitoring, mock_grpc, mock_service_factory, mock_setup_logging
+):
+    mock_service_factory.return_value = AsyncMock()
+
+    await main.main()
+
+    mock_setup_logging.assert_called_once()
+    mock_service_factory.assert_called_once()
+    mock_service_factory.return_value.initialize.assert_awaited_once()
+    mock_grpc.assert_awaited_once()
+    mock_monitoring.assert_awaited_once()
+    mock_logger.info.assert_has_calls(
+        [call("gRPC server started"), call("Monitoring server started")]
+    )
+
+
+@pytest.mark.asyncio
+@patch("main.setup_logging")
+@patch("main.ServiceFactory")
+@patch("main.start_grpc_server")
+@patch("main.start_monitoring_server")
+@patch("main.logger")
+@patch("main.asyncio.gather")
+async def test_main_with_close(
+    mock_gather,
+    mock_logger,
+    mock_monitoring,
+    mock_grpc,
+    mock_service_factory,
+    mock_setup_logging,
+):
+    mock_service_factory.return_value = AsyncMock()
+    mock_gather.side_effect = Exception("Details")
+
+    with pytest.raises(Exception):
+        await main.main()
+
+    mock_setup_logging.assert_called_once()
+    mock_service_factory.assert_called_once()
+    mock_service_factory.return_value.initialize.assert_awaited_once()
+    mock_grpc.assert_called_once()
+    mock_monitoring.assert_called_once()
+    mock_logger.info.assert_has_calls(
+        [call("gRPC server started"), call("Monitoring server started")]
+    )
+    mock_service_factory.return_value.close.assert_awaited_once()

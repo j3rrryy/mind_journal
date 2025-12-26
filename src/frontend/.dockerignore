@@ -1,0 +1,14 @@
+.vscode/
+.next/
+node_modules/
+out/
+build/
+dist/
+.DS_Store
+.gitignore
+.dockerignore
+.env
+Dockerfile
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*

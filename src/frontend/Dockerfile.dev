@@ -1,0 +1,10 @@
+FROM node:20-alpine
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /src/frontend
+COPY package*.json ./
+
+RUN npm ci
+COPY . .
+
+CMD ["npm", "run", "dev"]
