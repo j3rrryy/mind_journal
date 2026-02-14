@@ -31,7 +31,6 @@ services:
       - nginx
     depends_on:
       - frontend
-      - gateway
     container_name: nginx_api_dev
 
   nginx-all:
@@ -46,13 +45,13 @@ services:
       - nginx
     depends_on:
       - frontend
-      - gateway
     container_name: nginx_all_dev
 
   frontend:
     build:
       context: ./src/frontend/
       dockerfile: Dockerfile.dev
+    profiles: [ "app", "all" ]
     restart: unless-stopped
     expose:
       - 3000
@@ -264,6 +263,7 @@ services:
       - prometheus_data:/prometheus
       - ./dev/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
+      - nginx
       - backend
       - monitoring
     command: --config.file=/etc/prometheus/prometheus.yml

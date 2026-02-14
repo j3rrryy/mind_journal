@@ -35,7 +35,6 @@ services:
       - nginx
     depends_on:
       - frontend
-      - gateway
     container_name: nginx_prod
 
   frontend:
@@ -228,6 +227,7 @@ services:
       - prometheus_data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
+      - nginx
       - backend
       - monitoring
     command: --config.file=/etc/prometheus/prometheus.yml

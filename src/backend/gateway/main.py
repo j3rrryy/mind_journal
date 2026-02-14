@@ -5,7 +5,6 @@ from litestar.exceptions import HTTPException
 from litestar.plugins.prometheus import PrometheusController
 
 from config import (
-    setup_cors,
     setup_litestar_logging,
     setup_openapi,
     setup_prometheus,
@@ -29,7 +28,6 @@ def main() -> Litestar:
             controller_v1.wellness_router,
         ),
         debug=Settings.DEBUG,
-        cors_config=setup_cors(),
         logging_config=setup_litestar_logging(),
         middleware=(setup_prometheus().middleware,),
         openapi_config=setup_openapi(),

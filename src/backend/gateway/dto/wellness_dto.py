@@ -59,7 +59,9 @@ class RecordInfoDTO(FromResponseMixin, ToSchemaMixin):
         return cls(message.date.ToDatetime(), MetricsDTO.from_response(message.metrics))
 
     def to_schema(self, schema: type[MsgspecStruct]) -> MsgspecStruct:
-        return schema(self.date, self.metrics.to_schema(wellness_schemas.Metrics))
+        return schema(
+            self.date.date(), self.metrics.to_schema(wellness_schemas.Metrics)
+        )
 
 
 @dataclass(slots=True, frozen=True)

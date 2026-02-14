@@ -1,8 +1,10 @@
 services:
   frontend:
     image: frontend:test
-    environment:
+    env_file:
       - ./test/.env.frontend
+    environment:
+      - API_URL=http://gateway:8000/api
     command: npm test
     container_name: frontend_test
 

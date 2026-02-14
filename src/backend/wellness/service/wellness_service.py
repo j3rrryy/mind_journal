@@ -61,7 +61,7 @@ class WellnessService(WellnessServiceProtocol):
         return [
             response_dto.PeriodAnalyticsResponseDTO(
                 Period.QUARTER,
-                response_dto.FeatureImportanceResponseDTO(1, 2, 3, 4, 5),
+                response_dto.FeatureImportanceResponseDTO(0.5, 0.2, 0.3, 0.9, 0.75),
                 [
                     response_dto.ActionItemResponseDTO(
                         Insight.INSIGHT, {"bob": 12, "alice": 10}, Priority.MEDIUM

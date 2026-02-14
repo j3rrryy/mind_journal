@@ -1,0 +1,252 @@
+{
+  "app": {
+    "name": "MindJournal",
+    "tagline": "Analyze your well-being"
+  },
+  "common": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "logout": "Logout",
+    "add": "Add",
+    "update": "Update",
+    "clear": "Clear",
+    "revoke": "Revoke",
+    "go": "Go →",
+    "back": "Back",
+    "continue": "Continue",
+    "submit": "Submit",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "newPassword": "New password",
+    "oldPassword": "Current password",
+    "usernamePlaceholder": "3-30 characters: letters, digits, -, _",
+    "emailPlaceholder": "example@mail.com",
+    "passwordPlaceholder": "8-128 characters",
+    "confirmPasswordPlaceholder": "Repeat your password",
+    "newPasswordPlaceholder": "New password: 8-128 characters",
+    "oldPasswordPlaceholder": "Current password",
+    "codePlaceholder": "Enter 6-digit code",
+    "usernameInvalid": "Username must be 3-30 characters: letters, digits, -, _",
+    "emailInvalid": "Invalid email format",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordTooLong": "Password must be at most 128 characters",
+    "passwordMismatch": "Passwords do not match",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "register": "Sign Up",
+    "login": "Sign In",
+    "forgotPassword": "Forgot password?",
+    "backToLogin": "Back to Sign In",
+    "backToForgot": "Back",
+    "addRecord": "Add record",
+    "editRecord": "Edit record",
+    "lastUpdated": "Updated: {date}"
+  },
+  "landing": {
+    "hero": {
+      "title": "Track Your Emotional & Physical Well-Being",
+      "subtitle": "MindJournal helps you understand patterns in your mood, sleep, and activity through data visualization and AI-powered insights.",
+      "cta": "Get Started Free"
+    },
+    "features": {
+      "title": "Everything You Need to Track Your Well-being",
+      "daily": {
+        "title": "Daily Tracking",
+        "description": "Log your mood, sleep, activity, stress, energy, and focus in seconds."
+      },
+      "dashboard": {
+        "title": "Visual Dashboard",
+        "description": "See your progress at a glance with beautiful charts and color-coded metrics."
+      },
+      "analytics": {
+        "title": "Smart Analytics",
+        "description": "Discover correlations between different metrics and understand what affects your well-being."
+      },
+      "recommendations": {
+        "title": "Personalized Tips",
+        "description": "Get AI-powered recommendations based on your unique patterns and trends."
+      },
+      "calendar": {
+        "title": "Calendar View",
+        "description": "Browse your history with an intuitive calendar and see your daily records."
+      },
+      "insights": {
+        "title": "Deep Insights",
+        "description": "Understand how different factors influence your well-being over time."
+      }
+    },
+    "metrics": {
+      "title": "Track What Matters",
+      "mood": {
+        "name": "Mood",
+        "description": "How do you feel today?"
+      },
+      "sleep_hours": {
+        "name": "Sleep",
+        "description": "Hours of quality rest"
+      },
+      "activity": {
+        "name": "Activity",
+        "description": "Physical activity level"
+      },
+      "stress": {
+        "name": "Stress",
+        "description": "Daily stress levels"
+      },
+      "energy": {
+        "name": "Energy",
+        "description": "Your energy throughout the day"
+      },
+      "focus": {
+        "name": "Focus",
+        "description": "Ability to concentrate"
+      }
+    },
+    "how": {
+      "title": "How It Works",
+      "step": "step",
+      "step1": {
+        "title": "Track Metrics",
+        "description": "Daily log your mood, sleep, activity and other indicators"
+      },
+      "step2": {
+        "title": "Monitor Progress",
+        "description": "Observe trends and identify patterns"
+      },
+      "step3": {
+        "title": "Get Insights",
+        "description": "Smart recommendations based on your data"
+      }
+    },
+    "cta": {
+      "title": "Start Your Wellness Journey Today",
+      "button": "Create Free Account"
+    }
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "analytics": "Analytics",
+    "recommendations": "Recommendations",
+    "profile": "Profile",
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign In",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "error": "Invalid username or password"
+    },
+    "register": {
+      "title": "Sign Up",
+      "submit": "Sign Up",
+      "submitting": "Signing up...",
+      "error": "Registration failed"
+    },
+    "confirmEmail": {
+      "title": "Confirm Email",
+      "success": "Your email has been confirmed successfully. You can now sign in.",
+      "failed": "Failed to confirm email. The link may have expired.",
+      "noToken": "Confirmation token is missing."
+    },
+    "forgotPassword": {
+      "title": "Reset Password",
+      "submit": "Send Code",
+      "submitting": "Sending...",
+      "success": "A reset code has been sent to your email.",
+      "codeTitle": "Enter the 6-digit code from your email"
+    },
+    "resetPassword": {
+      "title": "Set New Password",
+      "submit": "Reset Password",
+      "submitting": "Resetting...",
+      "success": "Password has been reset. You can now sign in."
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome, {username}!",
+    "subtitle": "Here's an overview of your well-being today",
+    "today": "Today",
+    "weeklyAverage": "Weekly Average",
+    "noRecordToday": "No record for today",
+    "goToCalendar": "View your records",
+    "goToAnalytics": "Analysis and correlations",
+    "goToRecommendations": "Personal recommendations"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "View and manage your records",
+    "prevMonth": "← Previous",
+    "nextMonth": "Next →",
+    "recordFor": "Record for {date}",
+    "noRecord": "No record for this date",
+    "futureDate": "Cannot add record for a future date"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "subtitle": "Analyze correlations and identify patterns",
+    "featureImportance": "Feature Importance",
+    "insights": "Insights",
+    "insightsEmpty": "Not enough data for analysis",
+    "noDataForPeriod": "No data for selected period",
+    "goToRecommendations": "Want personalized recommendations?",
+    "goToRecommendationsDesc": "Based on analysis of your data",
+    "periods": {
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter",
+      "half_year": "Half Year",
+      "year": "Year"
+    }
+  },
+  "recommendations": {
+    "title": "Recommendations",
+    "subtitle": "Personal advice based on analysis of your data",
+    "highPriority": "High priority",
+    "mediumPriority": "Medium priority",
+    "lowPriority": "Low priority",
+    "notEnoughData": "Not enough data",
+    "notEnoughDataDesc": "More records are needed to generate personalized recommendations. Keep logging your daily well-being and the system will start providing recommendations.",
+    "tip": "Tip",
+    "tipDesc": "Recommendations are automatically updated based on your latest data. The more records you add, the more accurate the recommendations will be."
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account and security",
+    "tabs": {
+      "profile": "Profile",
+      "security": "Security"
+    },
+    "userInfo": "User Information",
+    "registeredAt": "Registration date",
+    "changeEmail": "Change Email",
+    "emailUpdated": "Email updated successfully",
+    "changePassword": "Change Password",
+    "activeSessions": "Active Sessions",
+    "noSessions": "No active sessions",
+    "irreversibleActions": "Irreversible Actions",
+    "clearAllData": "Clear all data",
+    "clearDataTitle": "Clear all data?",
+    "clearDataMessage": "All your wellness records will be deleted. Your account will remain, but analytics and recommendations will be reset.",
+    "dataCleared": "All data cleared successfully",
+    "deleteAccount": "Delete Account",
+    "deleteAccountTitle": "Delete account?",
+    "deleteAccountMessage": "This action is irreversible. All your data will be permanently deleted.",
+    "emailNotConfirmed": "Your email is not confirmed. Please check your inbox and click the confirmation link.",
+    "resendConfirmation": "Resend confirmation email",
+    "resendSuccess": "Confirmation email sent. Check your inbox.",
+    "resendCooldown": "Resend in {seconds}s"
+  }
+}

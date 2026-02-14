@@ -5,7 +5,6 @@ class Settings:
     APP_NAME = os.environ["APP_NAME"]
     VERSION = os.environ["VERSION"]
     DEBUG = bool(int(os.environ["DEBUG"]))
-    ALLOWED_ORIGINS = os.environ["ALLOWED_ORIGINS"].split(",")
 
     AUTH_SERVICE = os.environ["AUTH_SERVICE"]
     WELLNESS_SERVICE = os.environ["WELLNESS_SERVICE"]
