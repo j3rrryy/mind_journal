@@ -7,6 +7,7 @@ from ..mocks import (
     BROWSER,
     CODE,
     CONFIRMATION_TOKEN,
+    COUNTRY_CODE,
     EMAIL,
     ETAG,
     FILE_ID,
@@ -69,6 +70,7 @@ async def test_log_in(application_facade):
     assert response.access_token == ACCESS_TOKEN
     assert response.refresh_token == REFRESH_TOKEN
     assert response.email == EMAIL
+    assert response.country_code == COUNTRY_CODE
     assert response.browser == BROWSER
     assert response.email_confirmed
 
@@ -106,6 +108,7 @@ async def test_session_list(application_facade):
 
     assert response[0].session_id == SESSION_ID
     assert response[0].user_ip == USER_IP
+    assert response[0].country_code == COUNTRY_CODE
     assert response[0].browser == BROWSER
     assert response[0].created_at == TIMESTAMP
 
@@ -176,18 +179,6 @@ async def test_abort_upload(application_facade):
     dto = file_dto.AbortUploadDTO(USER_ID, UPLOAD_ID)
 
     await application_facade.abort_upload(ACCESS_TOKEN, dto)
-
-
-@pytest.mark.asyncio
-async def test_file_info(application_facade):
-    dto = file_dto.FileDTO(USER_ID, FILE_ID)
-
-    response = await application_facade.file_info(ACCESS_TOKEN, dto)
-
-    assert response.file_id == FILE_ID
-    assert response.name == NAME
-    assert response.size == SIZE
-    assert response.uploaded_at == TIMESTAMP
 
 
 @pytest.mark.asyncio

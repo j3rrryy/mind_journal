@@ -330,7 +330,7 @@ export default function ProfilePage() {
                     <p className="text-text-primary">{session.browser}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-sm text-text-secondary">{session.user_ip}</p>
-                      <CountryIndicator countryCode={session.countryCode} />
+                      <CountryIndicator countryCode={session.country_code} />
                     </div>
                   </div>
                   <Button

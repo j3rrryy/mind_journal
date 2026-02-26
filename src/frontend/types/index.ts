@@ -32,9 +32,9 @@ export interface Profile {
 export interface SessionInfo {
   session_id: string;
   user_ip: string;
+  country_code: string | null;
   browser: string;
   created_at: string;
-  countryCode: string | null;
 }
 
 export interface SessionList {

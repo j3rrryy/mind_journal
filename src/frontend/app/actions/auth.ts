@@ -3,7 +3,6 @@
 import { fetchServer } from "@/lib/server/fetch";
 import { setServerTokens, clearServerTokens } from "@/lib/auth/server";
 import type { Profile, SessionList, Tokens } from "@/types";
-import { getCountryCode } from "@/lib/geo/country";
 import { withActionResult, withActionResultFinally, withResult } from "./error-handler";
 
 export async function registerAction(formData: FormData) {
@@ -105,16 +104,7 @@ export async function resendEmailConfirmationAction() {
 }
 
 export async function getSessionsAction() {
-  return withResult(async () => {
-    const sessions = await fetchServer<SessionList>("/v1/auth/sessions");
-    const sessionsWithCountry = await Promise.all(
-      (sessions?.sessions || []).map(async (session) => ({
-        ...session,
-        countryCode: await getCountryCode(session.user_ip),
-      }))
-    );
-    return { sessions: sessionsWithCountry };
-  }, "Failed to load sessions");
+  return withResult(() => fetchServer<SessionList>("/v1/auth/sessions"), "Failed to load sessions");
 }
 
 export async function revokeSessionAction(sessionId: string) {
