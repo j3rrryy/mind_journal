@@ -188,11 +188,19 @@
   "calendar": {
     "title": "Calendar",
     "subtitle": "View and manage your records",
+    "tabs": {
+      "calendar": "Calendar",
+      "charts": "Charts"
+    },
+    "selectMetrics": "Select metrics to display",
     "prevMonth": "← Previous",
     "nextMonth": "Next →",
     "recordFor": "Record for {date}",
     "noRecord": "No record for this date",
-    "futureDate": "Cannot add record for a future date"
+    "futureDate": "Cannot add record for a future date",
+    "noDataForChart": "No data to display",
+    "yAxisLabel": "Scale 0-10",
+    "sleepHoursLabel": "Sleep hours"
   },
   "analytics": {
     "title": "Analytics",

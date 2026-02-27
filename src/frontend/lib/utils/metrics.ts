@@ -1,12 +1,6 @@
 import type { MetricKey } from "@/lib/constants/metrics";
 import { METRIC_COLORS, METRIC_LABELS, getMetricColorLevel } from "@/lib/constants/metrics";
 
-export function getMetricColorClasses(key: MetricKey, value: number, max: number = 10): string {
-  const level = getMetricColorLevel(key, value, max);
-  const colors = METRIC_COLORS[level];
-  return `${colors.bg} ${colors.text} ${colors.darkBg} ${colors.darkText}`;
-}
-
 export function getMetricBackgroundClass(key: MetricKey, value: number, max: number = 10): string {
   const level = getMetricColorLevel(key, value, max);
   return METRIC_COLORS[level].bg + " " + METRIC_COLORS[level].darkBg;
@@ -26,7 +20,7 @@ export function getMetricUnit(key: MetricKey, locale: string = "ru"): string {
   if (!unit) return "";
 
   if (key === "sleep_hours") {
-    return locale === "ru" ? " ч" : " h";
+    return locale === "ru" ? "ч" : "h";
   }
   return unit;
 }

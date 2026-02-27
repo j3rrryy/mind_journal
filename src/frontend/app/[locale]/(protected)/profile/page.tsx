@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import {
@@ -16,6 +16,7 @@ import { PageTitle } from "@/components/layout/PageTitle";
 import { AlertMessage } from "@/components/common/AlertMessage";
 import { SectionCard } from "@/components/layout/SectionCard";
 import { Button } from "@/components/common/Button";
+import { TabNavigation } from "@/components/layout/TabNavigation";
 import { formatDate } from "@/lib/utils/date";
 import {
   EMAIL_PATTERN,
@@ -48,6 +49,14 @@ export default function ProfilePage() {
   const [showClearDataModal, setShowClearDataModal] = useState(false);
   const [activeTab, setActiveTab] = useState<"profile" | "security">("profile");
   const [resendCooldown, setResendCooldown] = useState(0);
+
+  const profileTabs = useMemo(
+    () => [
+      { id: "profile", label: t("tabs.profile") },
+      { id: "security", label: t("tabs.security") },
+    ],
+    [t]
+  );
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -173,6 +182,16 @@ export default function ProfilePage() {
     setLoading(false);
   }, [resendCooldown, t, tc]);
 
+  const handleTabChange = useCallback(
+    (tabId: string) => {
+      setActiveTab(tabId as "profile" | "security");
+      if (tabId === "security") {
+        loadSessions();
+      }
+    },
+    [loadSessions]
+  );
+
   if (!user) {
     return <LoadingDots />;
   }
@@ -203,24 +222,13 @@ export default function ProfilePage() {
         />
       )}
 
-      <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
-        {(["profile", "security"] as const).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => {
-              setActiveTab(tab);
-              if (tab === "security") loadSessions();
-            }}
-            className={`px-4 py-2 transition-colors ${
-              activeTab === tab
-                ? "border-b-2 border-indigo-600 text-indigo-600 dark:border-indigo-400 dark:text-indigo-400"
-                : "text-text-secondary hover:text-text-primary dark:text-text-secondary dark:hover:text-text-primary"
-            }`}
-          >
-            {t(`tabs.${tab}`)}
-          </button>
-        ))}
-      </div>
+      <TabNavigation
+        tabs={profileTabs}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        variant="underline"
+        size="md"
+      />
 
       {activeTab === "profile" && (
         <div className="space-y-6">

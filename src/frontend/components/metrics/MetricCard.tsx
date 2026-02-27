@@ -41,7 +41,7 @@ export const MetricCard = React.memo(function MetricCard({
       <p className="text-sm text-text-secondary">{label}</p>
       <p className={`mt-2 text-2xl font-bold ${textClass}`}>
         {displayValue}
-        {unit && <span className="text-sm font-normal">{unit}</span>}
+        {unit && <span className="text-sm font-normal"> {unit}</span>}
       </p>
     </div>
   );
