@@ -31,7 +31,7 @@ async function refreshServerToken(allowLoginRedirect: boolean = true): Promise<s
     }
 
     try {
-      const headers = await createApiHeaders(true);
+      const headers = await createApiHeaders(null, true);
       const body = await encodeMsgpack({ refresh_token: refreshToken });
       const response = await fetch(`${API_URL}/v1/auth/refresh-tokens`, {
         method: "POST",
@@ -63,10 +63,11 @@ export async function fetchServer<T>(
   method: "GET" | "POST" | "PATCH" | "DELETE" = "GET",
   body?: unknown,
   accessTokenRequired: boolean = true,
+  locale: string | null = null,
   withClientInfo: boolean = false,
   allowLoginRedirect: boolean = true
 ): Promise<T> {
-  const headers = await createApiHeaders(withClientInfo);
+  const headers = await createApiHeaders(locale, withClientInfo);
 
   if (accessTokenRequired) {
     let accessToken = await getServerAccessToken();

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useAuth } from "@/lib/contexts/AuthContext";
 import {
   updateEmailAction,
@@ -36,6 +36,7 @@ export default function ProfilePage() {
   const { user, refreshUser, logout } = useAuth();
   const t = useTranslations("profile");
   const tc = useTranslations("common");
+  const locale = useLocale();
 
   const [newEmail, setNewEmail] = useState("");
   const [oldPassword, setOldPassword] = useState("");
@@ -65,7 +66,7 @@ export default function ProfilePage() {
   }, [resendCooldown]);
 
   const handleUpdateEmail = useCallback(async () => {
-    if (!newEmail) return;
+    if (!newEmail || !user) return;
     setError("");
     if (!EMAIL_PATTERN.test(newEmail)) {
       setError(tc("emailInvalid"));
@@ -75,10 +76,14 @@ export default function ProfilePage() {
       setError(tc("emailInvalid"));
       return;
     }
+    if (newEmail.toLowerCase() === user.email.toLowerCase()) {
+      setError(t("emailSameAsCurrent"));
+      return;
+    }
     setLoading(true);
     setSuccess("");
 
-    const result = await updateEmailAction(newEmail);
+    const result = await updateEmailAction(newEmail, locale);
     if (result.ok) {
       setSuccess(t("emailUpdated"));
       setNewEmail("");
@@ -87,7 +92,7 @@ export default function ProfilePage() {
       setError(result.error || tc("error"));
     }
     setLoading(false);
-  }, [newEmail, refreshUser, t, tc]);
+  }, [newEmail, refreshUser, t, tc, locale, user]);
 
   const handleUpdatePassword = useCallback(async () => {
     if (!oldPassword || !newPassword || !confirmPassword) return;
@@ -172,7 +177,7 @@ export default function ProfilePage() {
     setLoading(true);
     setError("");
     setSuccess("");
-    const result = await resendEmailConfirmationAction();
+    const result = await resendEmailConfirmationAction(locale);
     if (result.ok) {
       setSuccess(t("resendSuccess"));
       setResendCooldown(60);
@@ -180,7 +185,7 @@ export default function ProfilePage() {
       setError(result.error || tc("error"));
     }
     setLoading(false);
-  }, [resendCooldown, t, tc]);
+  }, [resendCooldown, t, tc, locale]);
 
   const handleTabChange = useCallback(
     (tabId: string) => {

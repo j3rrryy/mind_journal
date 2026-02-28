@@ -5,18 +5,25 @@ import { setServerTokens, clearServerTokens } from "@/lib/auth/server";
 import type { Profile, SessionList, Tokens } from "@/types";
 import { withActionResult, withActionResultFinally, withResult } from "./error-handler";
 
-export async function registerAction(formData: FormData) {
+export async function registerAction(formData: FormData, locale: string) {
   const username = formData.get("username") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
   return withActionResult(async () => {
-    await fetchServer<void>("/v1/auth/register", "POST", { username, email, password }, false);
+    await fetchServer<void>(
+      "/v1/auth/register",
+      "POST",
+      { username, email, password },
+      false,
+      locale
+    );
     const tokens = await fetchServer<Tokens>(
       "/v1/auth/log-in",
       "POST",
       { username, password },
       false,
+      locale,
       true
     );
     await setServerTokens(tokens);
@@ -29,13 +36,14 @@ export async function confirmEmailAction(token: string) {
   }, "Failed to confirm email");
 }
 
-export async function requestResetCodeAction(email: string) {
+export async function requestResetCodeAction(email: string, locale: string) {
   return withResult(async () => {
     const result = await fetchServer<{ user_id: string }>(
       "/v1/auth/reset-code/request",
       "POST",
       { email },
-      false
+      false,
+      locale
     );
     return { userId: result.user_id };
   }, "Failed to request reset code");
@@ -69,7 +77,7 @@ export async function resetPasswordAction(userId: string, newPassword: string) {
   }, "Failed to reset password");
 }
 
-export async function loginAction(formData: FormData) {
+export async function loginAction(formData: FormData, locale: string) {
   const username = formData.get("username") as string;
   const password = formData.get("password") as string;
 
@@ -79,6 +87,7 @@ export async function loginAction(formData: FormData) {
       "POST",
       { username, password },
       false,
+      locale,
       true
     );
     await setServerTokens(tokens);
@@ -97,9 +106,15 @@ export async function logoutAction() {
   );
 }
 
-export async function resendEmailConfirmationAction() {
+export async function resendEmailConfirmationAction(locale: string) {
   return withActionResult(async () => {
-    await fetchServer<void>("/v1/auth/resend-email-confirmation-mail", "POST");
+    await fetchServer<void>(
+      "/v1/auth/resend-email-confirmation-mail",
+      "POST",
+      undefined,
+      true,
+      locale
+    );
   }, "Failed to resend confirmation");
 }
 
@@ -116,14 +131,28 @@ export async function revokeSessionAction(sessionId: string) {
 export async function getProfileAction(allowLoginRedirect: boolean = true) {
   return withResult(
     () =>
-      fetchServer<Profile>("/v1/auth/profile", "GET", undefined, true, false, allowLoginRedirect),
+      fetchServer<Profile>(
+        "/v1/auth/profile",
+        "GET",
+        undefined,
+        true,
+        null,
+        false,
+        allowLoginRedirect
+      ),
     "Failed to load profile"
   );
 }
 
-export async function updateEmailAction(newEmail: string) {
+export async function updateEmailAction(newEmail: string, locale: string) {
   return withActionResult(async () => {
-    await fetchServer<void>("/v1/auth/profile/email", "PATCH", { new_email: newEmail });
+    await fetchServer<void>(
+      "/v1/auth/profile/email",
+      "PATCH",
+      { new_email: newEmail },
+      true,
+      locale
+    );
   }, "Failed to update email");
 }
 

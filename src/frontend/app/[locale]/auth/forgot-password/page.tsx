@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
       }
 
       setIsLoading(true);
-      const result = await requestResetCodeAction(email);
+      const result = await requestResetCodeAction(email, locale);
       setIsLoading(false);
 
       if (result.ok) {
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
         setError(result.error || tc("error"));
       }
     },
-    [email, t, tc]
+    [email, t, tc, locale]
   );
 
   const handleVerifyCode = useCallback(

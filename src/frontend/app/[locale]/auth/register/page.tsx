@@ -75,7 +75,7 @@ export default function RegisterPage() {
         formData.append("email", email);
         formData.append("password", password);
 
-        const result = await registerAction(formData);
+        const result = await registerAction(formData, locale);
 
         if (result.ok) {
           await refreshUser();

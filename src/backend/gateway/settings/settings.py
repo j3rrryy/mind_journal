@@ -10,6 +10,7 @@ class Settings:
     WELLNESS_SERVICE = os.environ["WELLNESS_SERVICE"]
     KAFKA_SERVICE = os.environ["KAFKA_SERVICE"]
     GRPC_CHANNEL_READY_TIMEOUT = 5
+    DEFAULT_LOCALE = "ru"
 
     HOST = "0.0.0.0"
     PORT = 8000

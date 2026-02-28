@@ -12,9 +12,16 @@ export class ServerApiError extends Error {
   }
 }
 
-export async function createApiHeaders(withClientInfo = false): Promise<Headers> {
+export async function createApiHeaders(
+  locale: string | null = null,
+  withClientInfo = false
+): Promise<Headers> {
   const headers = new Headers();
   headers.set("Content-Type", "application/x-msgpack");
+
+  if (locale !== null) {
+    headers.set("Accept-Language", locale);
+  }
 
   if (withClientInfo) {
     const { forwarded, userAgent } = await getClientInfo();

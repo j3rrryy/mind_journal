@@ -56,7 +56,7 @@ export default function LoginPage() {
         formData.append("username", username);
         formData.append("password", password);
 
-        const result = await loginAction(formData);
+        const result = await loginAction(formData, locale);
 
         if (result.ok) {
           await refreshUser();
