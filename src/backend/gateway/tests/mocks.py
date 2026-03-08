@@ -1,11 +1,13 @@
 import datetime
+from typing import Any
 from unittest.mock import AsyncMock
 
 from aiokafka import AIOKafkaProducer
 from google.protobuf.empty_pb2 import Empty
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from proto import AuthStub, WellnessStub, auth_pb2
+from enums import Period, Priority
+from proto import AuthStub, WellnessStub, auth_pb2, wellness_pb2
 
 TIMESTAMP = datetime.datetime(1970, 1, 1, 0, 2, 3)
 TIMESTAMP_MOCK = Timestamp(seconds=123)
@@ -30,12 +32,16 @@ COUNTRY_CODE = "US"
 BROWSER = "Firefox 47.0, Windows 7"
 
 
-UPLOAD_ID = "YjUzZjE5MzktY2U2Zi00NmNiLWE3Y2ItNmUwY2M2ODE3NDA5LjBmNzcyN2I0LTNkZjgtNGQ0ZS1hNTc3LTRiMmRjOTFjOTc2ZXgxNzYyOTAwNTgxNzg3NDgwOTI5"
-URL = "/s3-files/662c3e99-65dc-4a26-a2c2-bbd9f4e1fac4?AWSAccessKeyId=test_username&Signature=kn3PpoJ%2BwQBYVmpYl%2B8cZK2KM0s%3D&Expires=1741791573"
-ETAG = "fac024381d213f9949facd263b44aea4"
-FILE_ID = "b8a47c8d-9203-456a-aa58-ceab64b13cbb"
-SIZE = 123
-NAME = "test_name"
+MOOD = 7
+SLEEP_HOURS = 7.5
+ACTIVITY = 5
+STRESS = 1
+ENERGY = 9
+FOCUS = 6
+
+FEATURE_IMPORTANCE = 6.5
+ACTION_ITEM_KEY = "action_item_key"
+ACTION_ITEM_PARAMETERS = {"param1": 2, "param2": 1}
 
 
 def create_auth_stub_v1() -> AuthStub:
@@ -109,30 +115,74 @@ def create_auth_stub_v1() -> AuthStub:
     return stub
 
 
+def create_metrics() -> dict[str, Any]:
+    return dict(
+        mood=MOOD,
+        sleep_hours=SLEEP_HOURS,
+        activity=ACTIVITY,
+        stress=STRESS,
+        energy=ENERGY,
+        focus=FOCUS,
+    )
+
+
 def create_wellness_stub_v1() -> WellnessStub:
     stub = AsyncMock(spec=WellnessStub)
 
-    stub.InitiateUpload = AsyncMock(
-        return_value=file_pb2.InitiateUploadResponse(
-            upload_id=UPLOAD_ID,
-            part_size=SIZE,
-            parts=[file_pb2.UploadPart(part_number=1, url=URL)],
-        )
-    )
-    stub.CompleteUpload = AsyncMock(return_value=Empty())
-    stub.AbortUpload = AsyncMock(return_value=Empty())
-    stub.FileList = AsyncMock(
-        return_value=file_pb2.FileListResponse(
-            files=(
-                file_pb2.FileInfo(
-                    file_id=FILE_ID, name=NAME, size=SIZE, uploaded_at=TIMESTAMP_MOCK
+    stub.UpsertRecord = AsyncMock(return_value=Empty())
+    stub.RecordList = AsyncMock(
+        return_value=wellness_pb2.RecordListResponse(
+            records=(
+                wellness_pb2.RecordInfo(
+                    date=TIMESTAMP_MOCK,
+                    metrics=wellness_pb2.Metrics(**create_metrics()),
                 ),
             )
         )
     )
-    stub.Download = AsyncMock(return_value=file_pb2.URL(url=URL))
-    stub.Delete = AsyncMock(return_value=Empty())
     stub.DeleteAll = AsyncMock(return_value=Empty())
+    stub.Dashboard = AsyncMock(
+        return_value=wellness_pb2.DashboardResponse(
+            today=wellness_pb2.Metrics(**create_metrics()),
+            week=wellness_pb2.DashboardResponse.WeeklyAverages(**create_metrics()),
+        )
+    )
+    stub.Analytics = AsyncMock(
+        return_value=wellness_pb2.AnalyticsResponse(
+            analytics=[
+                wellness_pb2.AnalyticsResponse.PeriodAnalytics(
+                    period=Period.QUARTER.value,
+                    feature_importance=wellness_pb2.AnalyticsResponse.FeatureImportance(
+                        sleep_hours=FEATURE_IMPORTANCE,
+                        activity=FEATURE_IMPORTANCE,
+                        stress=FEATURE_IMPORTANCE,
+                        energy=FEATURE_IMPORTANCE,
+                        focus=FEATURE_IMPORTANCE,
+                    ),
+                    insights=[
+                        wellness_pb2.ActionItem(
+                            key=ACTION_ITEM_KEY,
+                            parameters=ACTION_ITEM_PARAMETERS,
+                            priority=Priority.LOW.value,
+                        )
+                    ],
+                    generated_at=TIMESTAMP_MOCK,
+                )
+            ]
+        )
+    )
+    stub.Recommendations = AsyncMock(
+        return_value=wellness_pb2.RecommendationsResponse(
+            recommendations=[
+                wellness_pb2.ActionItem(
+                    key=ACTION_ITEM_KEY,
+                    parameters=ACTION_ITEM_PARAMETERS,
+                    priority=Priority.HIGH.value,
+                )
+            ],
+            generated_at=TIMESTAMP_MOCK,
+        )
+    )
     return stub
 
 

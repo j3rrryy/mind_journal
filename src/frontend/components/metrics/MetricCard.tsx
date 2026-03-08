@@ -8,10 +8,12 @@ import {
   getMetricUnit,
 } from "@/lib/utils/metrics";
 import { useLocale } from "next-intl";
+import { ChangeIndicator } from "./ChangeIndicator";
 
 interface MetricCardProps {
   metricKey: MetricKey;
   value: number | null;
+  change?: number | null;
   max?: number;
   forceDecimals?: boolean;
 }
@@ -19,6 +21,7 @@ interface MetricCardProps {
 export const MetricCard = React.memo(function MetricCard({
   metricKey,
   value,
+  change,
   max = 10,
   forceDecimals = false,
 }: MetricCardProps) {
@@ -38,7 +41,12 @@ export const MetricCard = React.memo(function MetricCard({
 
   return (
     <div className={`${backgroundClass} rounded-xl p-4 transition-all hover:shadow-md`}>
-      <p className="text-sm text-text-secondary">{label}</p>
+      <div className="flex items-start justify-between text-sm">
+        <p className="text-text-secondary">{label}</p>
+        {change !== null && change !== undefined && (
+          <ChangeIndicator change={change} className={textClass} />
+        )}
+      </div>
       <p className={`mt-2 text-2xl font-bold ${textClass}`}>
         {displayValue}
         {unit && <span className="text-sm font-normal"> {unit}</span>}

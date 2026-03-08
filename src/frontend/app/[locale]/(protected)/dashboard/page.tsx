@@ -59,6 +59,11 @@ export default function DashboardPage() {
     return data.week as Record<MetricKey, number>;
   }, [data?.week]);
 
+  const weekChanges = useMemo(() => {
+    if (!data?.week || !data.week?.changes) return undefined;
+    return data.week.changes as Record<MetricKey, number>;
+  }, [data?.week]);
+
   const handleOpenModal = useCallback(() => {
     setIsModalOpen(true);
   }, []);
@@ -142,7 +147,7 @@ export default function DashboardPage() {
       </SectionCard>
 
       <SectionCard title={t("weeklyAverage")}>
-        {weekMetrics && <MetricsGrid metrics={weekMetrics} forceDecimals />}
+        {weekMetrics && <MetricsGrid metrics={weekMetrics} changes={weekChanges} forceDecimals />}
       </SectionCard>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

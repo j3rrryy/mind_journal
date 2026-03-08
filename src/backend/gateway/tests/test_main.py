@@ -27,7 +27,7 @@ def test_app(mock_litestar):
         HealthController,
         PrometheusController,
         controller_v1.auth_router,
-        controller_v1.file_router,
+        controller_v1.wellness_router,
     )
     assert kwargs["debug"] == Settings.DEBUG
     assert isinstance(kwargs["logging_config"], LoggingConfig)
