@@ -16,7 +16,7 @@ class WellnessRepositoryFactory:
 
     async def initialize(self) -> None:
         try:
-            await self._setup_wellness_repository()
+            self._setup_wellness_repository()
         except Exception:
             await self.close()
             raise
@@ -29,7 +29,7 @@ class WellnessRepositoryFactory:
                 self._engine = None
                 self._wellness_repository = None
 
-    async def _setup_wellness_repository(self) -> None:
+    def _setup_wellness_repository(self) -> None:
         url = URL.create(
             Settings.POSTGRES_DRIVER,
             Settings.POSTGRES_USER,

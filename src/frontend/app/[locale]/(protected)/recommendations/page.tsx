@@ -58,42 +58,44 @@ export default function RecommendationsPage() {
 
       {error && <AlertMessage message={error} variant="danger" />}
 
-      {data?.generated_at && (
-        <div className="text-sm text-text-secondary">
-          {tc("lastUpdated", { date: formatDate(data.generated_at) })}
-        </div>
-      )}
-
       {sortedRecommendations.length > 0 ? (
-        <div className="space-y-4">
-          {sortedRecommendations.map((rec, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <div className="mb-3 flex items-start justify-between gap-4">
-                <div className="flex items-center gap-2">
-                  <PriorityBadge priority={rec.priority} />
-                </div>
-              </div>
-              <p className="text-lg text-text-primary">{rec.recommendation}</p>
-              {Object.keys(rec.parameters).length > 0 && (
-                <div className="mt-3 bg-surface">
-                  <div className="text-sm text-text-secondary">
-                    {Object.entries(rec.parameters).map(([key, value]) => {
-                      const label =
-                        METRIC_LABELS[key as MetricKey]?.[
-                          locale as keyof (typeof METRIC_LABELS)[MetricKey]
-                        ] || key;
-                      return (
-                        <span key={key} className="mr-4">
-                          {label}: {value.toFixed(2)}
-                        </span>
-                      );
-                    })}
+        <>
+          {data?.generated_at && (
+            <div className="text-sm text-text-secondary">
+              {tc("lastUpdated", { date: formatDate(data.generated_at) })}
+            </div>
+          )}
+
+          <div className="space-y-4">
+            {sortedRecommendations.map((rec, index) => (
+              <Card key={index} className="hover:shadow-md transition-shadow">
+                <div className="mb-3 flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-2">
+                    <PriorityBadge priority={rec.priority} />
                   </div>
                 </div>
-              )}
-            </Card>
-          ))}
-        </div>
+                <p className="text-lg text-text-primary">{rec.recommendation}</p>
+                {Object.keys(rec.parameters).length > 0 && (
+                  <div className="mt-3 bg-surface">
+                    <div className="text-sm text-text-secondary">
+                      {Object.entries(rec.parameters).map(([key, value]) => {
+                        const label =
+                          METRIC_LABELS[key as MetricKey]?.[
+                            locale as keyof (typeof METRIC_LABELS)[MetricKey]
+                          ] || key;
+                        return (
+                          <span key={key} className="mr-4">
+                            {label}: {value.toFixed(2)}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
+        </>
       ) : (
         <EmptyState icon="📊" title={t("notEnoughData")} description={t("notEnoughDataDesc")} />
       )}

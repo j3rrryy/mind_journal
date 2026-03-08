@@ -4,9 +4,10 @@ version = "0.0.1"
 requires-python = ">=3.12"
 dependencies = [
     "alembic==1.18.3",
+    "apscheduler[redis]>=3.11.2",
     "asyncpg==0.31.0",
     "cashews[redis]==7.4.4",
-    "celery[redis]>=5.6.2",
+    "dramatiq[redis,prometheus]>=2.1.0",
     "greenlet>=3.3.1",
     "grpcio==1.76.0",
     "grpcio-tools==1.76.0",

@@ -5,11 +5,12 @@ from cashews import Cache
 
 from dto import request as request_dto
 from dto import response as response_dto
-from enums import Insight, Period, Priority, Recommendation
 from protocols import WellnessRepositoryProtocol, WellnessServiceProtocol
 from utils import (
     user_all_keys,
+    user_analytics_key,
     user_dashboard_key,
+    user_recommendations_key,
     user_record_list_key,
     utc_now_naive,
     utc_today,
@@ -57,33 +58,14 @@ class WellnessService(WellnessServiceProtocol):
     async def analytics(
         self, user_id: str
     ) -> list[response_dto.PeriodAnalyticsResponseDTO]:
-        # TODO: implement
-        return [
-            response_dto.PeriodAnalyticsResponseDTO(
-                Period.QUARTER,
-                response_dto.FeatureImportanceResponseDTO(0.5, 0.2, 0.3, 0.9, 0.75),
-                [
-                    response_dto.ActionItemResponseDTO(
-                        Insight.INSIGHT, {"bob": 12, "alice": 10}, Priority.MEDIUM
-                    )
-                ],
-                utc_now_naive(),
-            )
-        ]
+        return await self._cache.get(user_analytics_key(user_id)) or []
 
     async def recommendations(
         self, user_id: str
     ) -> response_dto.RecommendationsResponseDTO:
-        # TODO: implement
-        return response_dto.RecommendationsResponseDTO(
-            [
-                response_dto.ActionItemResponseDTO(
-                    Recommendation.RECOMMENDATION,
-                    {"bob": 100, "alice": 5},
-                    Priority.HIGH,
-                )
-            ],
-            utc_now_naive(),
+        recommendations = await self._cache.get(user_recommendations_key(user_id))
+        return recommendations or response_dto.RecommendationsResponseDTO(
+            [], utc_now_naive()
         )
 
     async def _get_cached(

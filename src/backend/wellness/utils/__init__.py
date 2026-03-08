@@ -1,4 +1,10 @@
-from .cache_keys import user_all_keys, user_dashboard_key, user_record_list_key
+from .cache_keys import (
+    user_all_keys,
+    user_analytics_key,
+    user_dashboard_key,
+    user_recommendations_key,
+    user_record_list_key,
+)
 from .utils import (
     ExceptionInterceptor,
     database_exception_handler,
@@ -10,7 +16,9 @@ from .utils import (
 
 __all__ = [
     "user_all_keys",
+    "user_analytics_key",
     "user_dashboard_key",
+    "user_recommendations_key",
     "user_record_list_key",
     "ExceptionInterceptor",
     "database_exception_handler",
