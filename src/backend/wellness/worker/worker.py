@@ -6,8 +6,7 @@ from config import setup_logging
 from factories import ServiceFactory
 from settings import Settings
 
-from .dependencies import DependencyMiddleware
-from .monitoring import MonitoringMiddleware
+from .middlewares import DependencyMiddleware, MonitoringMiddleware
 from .scheduler import DramatiqScheduler
 
 setup_logging()
@@ -28,6 +27,7 @@ broker.add_middleware(DependencyMiddleware(service_factory, scheduler))
 broker.add_middleware(MonitoringMiddleware(service_factory.get_is_ready()))
 
 
-from analytics import test  # noqa
+from .tasks import analytics_scheduler, sync_scheduler  # noqa
 
-scheduler.add_job(test, "* * * * *")
+scheduler.add_job(analytics_scheduler, "*/5 * * * *")
+scheduler.add_job(sync_scheduler, "0 0 * * *", True)

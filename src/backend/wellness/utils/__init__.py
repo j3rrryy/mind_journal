@@ -1,4 +1,5 @@
 from .cache_keys import (
+    analytics_scheduler_key,
     user_all_keys,
     user_analytics_key,
     user_dashboard_key,
@@ -15,6 +16,7 @@ from .utils import (
 )
 
 __all__ = [
+    "analytics_scheduler_key",
     "user_all_keys",
     "user_analytics_key",
     "user_dashboard_key",

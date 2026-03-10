@@ -16,3 +16,7 @@ def user_recommendations_key(user_id: str) -> str:
 
 def user_all_keys(user_id: str) -> str:
     return f"user:{user_id}:*"
+
+
+def analytics_scheduler_key() -> str:
+    return "analytics:scheduler"

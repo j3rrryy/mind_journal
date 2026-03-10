@@ -1,4 +1,5 @@
 import importlib
+from datetime import datetime
 
 from apscheduler.jobstores.redis import RedisJobStore
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -23,18 +24,24 @@ class DramatiqScheduler:
             jobstores={"default": jobstore}, timezone="UTC"
         )
 
-    def add_job(self, func: Actor, cron_expr: str):
+    def add_job(self, func: Actor, cron_expr: str, run_immediately: bool = False):
         module_name = func.fn.__module__
         function_name = func.fn.__name__
         func_path = f"{module_name}.{function_name}"
-        self._scheduler.add_job(
-            func=_execute,
-            trigger=CronTrigger.from_crontab(cron_expr),
-            kwargs={"func_path": func_path},
-            id=func.fn.__name__,
-            name=func.fn.__name__,
-            replace_existing=True,
-        )
+
+        job_kwargs = {
+            "func": _execute,
+            "trigger": CronTrigger.from_crontab(cron_expr),
+            "kwargs": {"func_path": func_path},
+            "id": func.fn.__name__,
+            "name": func.fn.__name__,
+            "replace_existing": True,
+        }
+
+        if run_immediately:
+            job_kwargs["next_run_time"] = datetime.now()
+
+        self._scheduler.add_job(**job_kwargs)
 
     def start(self):
         if not self._scheduler.running:

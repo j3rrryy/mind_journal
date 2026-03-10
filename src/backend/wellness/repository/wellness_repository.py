@@ -132,3 +132,8 @@ class WellnessRepository(WellnessRepositoryProtocol):
                 changes,
             ),
         )
+
+    async def get_all_user_ids(self) -> list[str]:
+        async with self._sessionmaker() as session:
+            user_ids = await session.scalars(select(Record.user_id).distinct())
+        return list(user_ids)
