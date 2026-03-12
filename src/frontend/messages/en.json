@@ -207,7 +207,7 @@
     "subtitle": "Analyze correlations and identify patterns",
     "featureImportance": "Feature Importance",
     "insights": "Insights",
-    "insightsEmpty": "Not enough data for analysis",
+    "insightsEmpty": "No new insights",
     "noDataForPeriod": "No data for selected period",
     "goToRecommendations": "Want personalized recommendations?",
     "goToRecommendationsDesc": "Based on analysis of your data",

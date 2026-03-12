@@ -7,6 +7,7 @@ from dto import request as request_dto
 from dto import response as response_dto
 from protocols import WellnessRepositoryProtocol, WellnessServiceProtocol
 from utils import (
+    get_month_range,
     user_all_keys,
     user_analytics_key,
     user_dashboard_key,
@@ -34,8 +35,13 @@ class WellnessService(WellnessServiceProtocol):
         self, data: request_dto.MonthRequestDTO
     ) -> list[response_dto.RecordInfoResponseDTO]:
         list_key = user_record_list_key(data.user_id, data.year, data.month)
+        start_date, end_date = get_month_range(data.year, data.month)
         records = await self._get_cached(
-            list_key, self._wellness_repository.record_list, data
+            list_key,
+            self._wellness_repository.record_list,
+            data.user_id,
+            start_date,
+            end_date,
         )
         return records
 

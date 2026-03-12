@@ -92,6 +92,6 @@ def _process_recommendations(
 ) -> None:
     if recommendations:
         age = now - int(recommendations.generated_at.timestamp())
-        if age < Settings.RECOMENDATIONS_TTL:
+        if age < Settings.RECOMMENDATIONS_TTL:
             return
     generate_recommendations.send(user_id)

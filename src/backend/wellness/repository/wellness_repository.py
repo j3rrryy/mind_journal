@@ -8,8 +8,7 @@ from dto import request as request_dto
 from dto import response as response_dto
 from enums import Metric
 from protocols import WellnessRepositoryProtocol
-from settings import Settings
-from utils import database_exception_handler, get_month_range
+from utils import database_exception_handler
 
 from .models import Record
 
@@ -26,22 +25,19 @@ class WellnessRepository(WellnessRepositoryProtocol):
 
     @database_exception_handler
     async def record_list(
-        self, data: request_dto.MonthRequestDTO
+        self, user_id: str, start_date: datetime.date, end_date: datetime.date
     ) -> list[response_dto.RecordInfoResponseDTO]:
-        start_date, end_date = get_month_range(data.year, data.month)
         async with self._sessionmaker() as session:
             records = await session.scalars(
                 select(Record)
                 .where(
-                    Record.user_id == data.user_id,
+                    Record.user_id == user_id,
                     Record.date >= start_date,
                     Record.date < end_date,
                 )
                 .order_by(Record.date.asc())
             )
-        return [
-            response_dto.RecordInfoResponseDTO.from_model(record) for record in records
-        ]
+        return [response_dto.RecordInfoResponseDTO.from_model(r) for r in records]
 
     @database_exception_handler
     async def delete_all(self, user_id: str) -> None:
@@ -117,7 +113,7 @@ class WellnessRepository(WellnessRepositoryProtocol):
         changes = {}
         for metric, (curr, prev) in zip(Metric, metric_pairs):
             change = round(curr - prev, 1)
-            if abs(change) > Settings.MINIMUM_SIGNIFICANT_CHANGE:
+            if abs(change) > 0.5:
                 changes[metric] = change
 
         return response_dto.DashboardResponseDTO(
@@ -133,6 +129,7 @@ class WellnessRepository(WellnessRepositoryProtocol):
             ),
         )
 
+    @database_exception_handler
     async def get_all_user_ids(self) -> list[str]:
         async with self._sessionmaker() as session:
             user_ids = await session.scalars(select(Record.user_id).distinct())

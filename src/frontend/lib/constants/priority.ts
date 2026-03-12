@@ -1,9 +1,9 @@
 export type Priority = "high" | "medium" | "low";
 
 export const PRIORITY_LABELS: Record<Priority, { en: string; ru: string }> = {
-  high: { en: "High", ru: "Высокий" },
-  medium: { en: "Medium", ru: "Средний" },
-  low: { en: "Low", ru: "Низкий" },
+  high: { en: "Important", ru: "Важно" },
+  medium: { en: "Good to know", ru: "Полезно знать" },
+  low: { en: "FYI", ru: "К сведению" },
 } as const;
 
 export const PRIORITY_COLORS: Record<

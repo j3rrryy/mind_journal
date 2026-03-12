@@ -207,7 +207,7 @@
     "subtitle": "Анализ корреляций и выявление закономерностей",
     "featureImportance": "Важность факторов",
     "insights": "Инсайты",
-    "insightsEmpty": "Недостаточно данных для анализа",
+    "insightsEmpty": "Нет новых инсайтов",
     "noDataForPeriod": "Нет данных за выбранный период",
     "goToRecommendations": "Хочешь персональные рекомендации?",
     "goToRecommendationsDesc": "На основе анализа твоих данных",

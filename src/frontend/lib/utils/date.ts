@@ -1,4 +1,7 @@
 export function formatDate(dateString: string): string {
+  if (!dateString.endsWith("Z") && !/[\+\-]\d{2}:\d{2}/.test(dateString)) {
+    dateString += "Z";
+  }
   return new Date(dateString).toLocaleString("ru-RU", {
     day: "2-digit",
     month: "2-digit",
@@ -10,6 +13,9 @@ export function formatDate(dateString: string): string {
 }
 
 export function formatDateShort(dateString: string, locale: string = "ru"): string {
+  if (!dateString.endsWith("Z") && !/[\+\-]\d{2}:\d{2}/.test(dateString)) {
+    dateString += "Z";
+  }
   return new Date(dateString).toLocaleDateString(locale, {
     day: "2-digit",
     month: "2-digit",
