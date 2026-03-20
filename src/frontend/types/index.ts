@@ -114,7 +114,7 @@ export interface FeatureImportance {
 }
 
 export interface Insight {
-  insight: "insight";
+  insight: string;
   parameters: Record<string, number>;
   priority: Priority;
 }
@@ -131,7 +131,7 @@ export interface Analytics {
 }
 
 export interface Recommendation {
-  recommendation: "recommendation";
+  recommendation: string;
   parameters: Record<string, number>;
   priority: Priority;
 }

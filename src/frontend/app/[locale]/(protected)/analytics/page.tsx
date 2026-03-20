@@ -34,7 +34,19 @@ export default function AnalyticsPage() {
     try {
       const response = await getAnalyticsAction();
       if (response.ok) {
-        setAnalytics(response.data.analytics);
+        const roundedAnalytics = response.data.analytics.map((period) => ({
+          ...period,
+          insights: period.insights.map((insight) => ({
+            ...insight,
+            parameters: Object.fromEntries(
+              Object.entries(insight.parameters).map(([key, value]) => [
+                key,
+                Math.round(value * 10) / 10,
+              ])
+            ),
+          })),
+        }));
+        setAnalytics(roundedAnalytics);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error loading analytics");
@@ -121,12 +133,9 @@ export default function AnalyticsPage() {
                     <div className="mb-2 flex items-center gap-2">
                       <PriorityBadge priority={insight.priority} />
                     </div>
-                    <p className="text-text-primary">{insight.insight}</p>
-                    {Object.keys(insight.parameters).length > 0 && (
-                      <div className="mt-2 text-sm text-text-secondary">
-                        {JSON.stringify(insight.parameters, null, 2)}
-                      </div>
-                    )}
+                    <p className="text-text-primary">
+                      {t(`items.${insight.insight}`, insight.parameters)}
+                    </p>
                   </div>
                 ))}
               </div>
