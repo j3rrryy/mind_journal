@@ -101,7 +101,51 @@ class Insight(str, Enum):
 
 
 class Recommendation(str, Enum):
-    RECOMMENDATION = "recommendation"
+    # MOOD
+    DO_SOMETHING_FUN = "do_something_fun"
+    SOCIAL_CONNECTION = "social_connection"
+    GRATITUDE_PRACTICE = "gratitude_practice"
+
+    # SLEEP
+    IMPROVE_SLEEP_HYGIENE = "improve_sleep_hygiene"
+    FIXED_BEDTIME = "fixed_bedtime"
+    AVOID_SCREENS_BEFORE_BED = "avoid_screens_before_bed"
+
+    # ACTIVITY
+    TAKE_WALK = "take_walk"
+    LIGHT_EXERCISE = "light_exercise"
+    STRETCHING = "stretching"
+
+    # STRESS
+    BREATHING_EXERCISE = "breathing_exercise"
+    MEDITATION = "meditation"
+    MINDFULNESS = "mindfulness"
+
+    # ENERGY
+    BOOST_ENERGY = "boost_energy"
+    HYDRATION = "hydration"
+    POWER_NAP = "power_nap"
+
+    # FOCUS
+    POMODORO_TECHNIQUE = "pomodoro_technique"
+    TAKE_BREAKS = "take_breaks"
+    MINIMIZE_DISTRACTIONS = "minimize_distractions"
+
+    # GENERAL
+    MAINTAIN_GOOD_HABITS = "maintain_good_habits"
+    CONTINUE_POSITIVE_TREND = "continue_positive_trend"
+
+    # FEATURE IMPORTANCE
+    FOCUS_ON_SLEEP = "focus_on_sleep"
+    FOCUS_ON_ACTIVITY = "focus_on_activity"
+    FOCUS_ON_STRESS = "focus_on_stress"
+    FOCUS_ON_ENERGY = "focus_on_energy"
+    FOCUS_ON_FOCUS = "focus_on_focus"
+
+    # PREVENTIVE
+    PREVENT_BURNOUT = "prevent_burnout"
+    MORNING_SUNLIGHT = "morning_sunlight"
+    EVENING_WIND_DOWN = "evening_wind_down"
 
 
 class MailType(Enum):

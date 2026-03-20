@@ -9,7 +9,7 @@ from settings import Settings
 from utils import user_analytics_key, utc_now_naive, utc_today
 
 from ..container import get_cache, get_wellness_repository
-from .analytics_core import compute_feature_importance, generate_insights
+from .core import compute_feature_importance, generate_insights
 
 
 @dramatiq.actor
@@ -56,10 +56,10 @@ async def _analyze_period(
         level = AnalyticsLevel.ADVANCED
 
     analytics_dto = response_dto.PeriodAnalyticsResponseDTO(
-        period=period,
-        feature_importance=compute_feature_importance(records, level),
-        insights=generate_insights(records, level),
-        generated_at=utc_now_naive(),
+        period,
+        compute_feature_importance(records, level),
+        generate_insights(records, level),
+        utc_now_naive(),
     )
     await _save_analytics(user_id, analytics_dto, cache)
 
