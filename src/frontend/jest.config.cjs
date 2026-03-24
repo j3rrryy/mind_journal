@@ -6,6 +6,7 @@ module.exports = {
   },
   moduleNameMapper: {
     "\\.(css|scss|sass)$": "identity-obj-proxy",
+    "^@/(.*)$": "<rootDir>/$1",
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testPathIgnorePatterns: ["/node_modules/", "/.next/"],
@@ -17,5 +18,5 @@ module.exports = {
     "!.next/**",
     "!tests/**",
   ],
-  coverageReporters: ["text", ["cobertura", { file: "<rootDir>/coverage.xml" }]],
+  coverageReporters: ["text", ["cobertura", { file: "coverage.xml" }]],
 };

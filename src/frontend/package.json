@@ -12,7 +12,6 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "maxmind": "^5.0.5",
     "msgpack-lite": "^0.1.26",
     "next": "^16.1.6",
     "next-intl": "^4.8.2",
