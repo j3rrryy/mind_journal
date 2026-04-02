@@ -2,7 +2,6 @@ from dataclasses import asdict, dataclass, replace
 from typing import Type, TypeVar
 
 import msgspec
-from google.protobuf.internal.containers import ScalarMap
 from google.protobuf.message import Message
 from google.protobuf.timestamp_pb2 import Timestamp
 from msgspec import Struct
@@ -41,8 +40,6 @@ class FromResponseMixin(BaseDTO):
             field = getattr(message, f)
             if isinstance(field, Timestamp):
                 field = field.ToDatetime()
-            elif isinstance(field, ScalarMap):
-                field = dict(field)
             fields.append(field)
         return cls(*fields)
 

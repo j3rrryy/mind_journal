@@ -6,11 +6,11 @@ from aiokafka import AIOKafkaProducer
 from google.protobuf.empty_pb2 import Empty
 from google.protobuf.timestamp_pb2 import Timestamp
 
-from enums import Period, Priority
+from enums import Insight, Period, Priority, Recommendation
 from proto import AuthStub, WellnessStub, auth_pb2, wellness_pb2
 
-TIMESTAMP = datetime.datetime(1970, 1, 1, 0, 2, 3)
-TIMESTAMP_MOCK = Timestamp(seconds=123)
+TIMESTAMP = datetime.datetime(2005, 1, 1, 0, 2, 3)
+TIMESTAMP_MOCK = Timestamp(seconds=1104537723)
 
 ACCESS_TOKEN = "eyJ0eXBlIjowLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.fyxQuUSic9USlnl9vXYYIelRBTaxsdILiosQHVIOUlU"
 REFRESH_TOKEN = "eyJ0eXBlIjoxLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.Cz6F9m9TJP76hzcyst0xE9vp6RmXtGIhAXaNqJWrJL8"
@@ -39,9 +39,10 @@ STRESS = 1
 ENERGY = 9
 FOCUS = 6
 
-FEATURE_IMPORTANCE = 6.5
-ACTION_ITEM_KEY = "action_item_key"
-ACTION_ITEM_PARAMETERS = {"param1": 2, "param2": 1}
+FEATURE_IMPORTANCE = 0.2
+INSIGHT = Insight.UNUSUAL_LOW_ENERGY
+RECOMMENDATION = Recommendation.TAKE_BREAKS
+ACTION_ITEM_PARAMETERS = {"param1": 2.0, "param2": 1.5}
 
 
 def create_auth_stub_v1() -> AuthStub:
@@ -151,7 +152,7 @@ def create_wellness_stub_v1() -> WellnessStub:
         return_value=wellness_pb2.AnalyticsResponse(
             analytics=[
                 wellness_pb2.AnalyticsResponse.PeriodAnalytics(
-                    period=Period.QUARTER.value,
+                    period=Period.QUARTER.name,
                     feature_importance=wellness_pb2.AnalyticsResponse.FeatureImportance(
                         sleep_hours=FEATURE_IMPORTANCE,
                         activity=FEATURE_IMPORTANCE,
@@ -161,9 +162,9 @@ def create_wellness_stub_v1() -> WellnessStub:
                     ),
                     insights=[
                         wellness_pb2.ActionItem(
-                            key=ACTION_ITEM_KEY,
+                            key=INSIGHT.name,
                             parameters=ACTION_ITEM_PARAMETERS,
-                            priority=Priority.LOW.value,
+                            priority=Priority.LOW.name,
                         )
                     ],
                     generated_at=TIMESTAMP_MOCK,
@@ -175,9 +176,9 @@ def create_wellness_stub_v1() -> WellnessStub:
         return_value=wellness_pb2.RecommendationsResponse(
             recommendations=[
                 wellness_pb2.ActionItem(
-                    key=ACTION_ITEM_KEY,
+                    key=RECOMMENDATION.name,
                     parameters=ACTION_ITEM_PARAMETERS,
-                    priority=Priority.HIGH.value,
+                    priority=Priority.HIGH.name,
                 )
             ],
             generated_at=TIMESTAMP_MOCK,

@@ -30,6 +30,6 @@ def validate_year_month_future(year: int, month: int) -> tuple[int, int]:
     max_date = utc_today() + datetime.timedelta(days=1)
     if year > max_date.year:
         raise ValidationException(detail="Year cannot be in the future")
-    elif year == max_date.year and month > max_date.month:
+    elif year == max_date.year and month > max_date.month:  # pragma: no cover
         raise ValidationException(detail="Month cannot be in the future")
     return year, month

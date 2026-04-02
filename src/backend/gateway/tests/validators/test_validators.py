@@ -1,10 +1,12 @@
+import datetime
 from unittest.mock import MagicMock
 
 import pytest
 from litestar import Request
-from litestar.exceptions import NotAuthorizedException
+from litestar.exceptions import NotAuthorizedException, ValidationException
 
-from validators import validate_access_token
+from utils import utc_today
+from validators import validate_access_token, validate_date, validate_year_month_future
 
 from ..mocks import ACCESS_TOKEN
 
@@ -36,3 +38,20 @@ def test_validate_access_token(
         token = validate_access_token(mock_request)
 
         assert token == expected_token
+
+
+def test_validate_date_past():
+    with pytest.raises(ValidationException, match="Date is out of valid range"):
+        validate_date(datetime.date(1999, 1, 1))
+
+
+def test_validate_date_future():
+    with pytest.raises(ValidationException, match="Date is out of valid range"):
+        validate_date(utc_today() + datetime.timedelta(days=2))
+
+
+def test_validate_year_month_future_year():
+    date = utc_today() + datetime.timedelta(days=500)
+
+    with pytest.raises(ValidationException, match="Year cannot be in the future"):
+        validate_year_month_future(date.year, date.month)

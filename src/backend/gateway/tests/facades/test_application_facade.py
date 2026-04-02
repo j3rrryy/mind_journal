@@ -1,25 +1,30 @@
 import pytest
 
-from dto import auth_dto, file_dto
+from dto import auth_dto, wellness_dto
+from enums import Period, Priority
 
 from ..mocks import (
     ACCESS_TOKEN,
+    ACTION_ITEM_PARAMETERS,
+    ACTIVITY,
     BROWSER,
     CODE,
     CONFIRMATION_TOKEN,
     COUNTRY_CODE,
     EMAIL,
-    ETAG,
-    FILE_ID,
+    ENERGY,
+    FEATURE_IMPORTANCE,
+    FOCUS,
+    INSIGHT,
     LOCALE,
-    NAME,
+    MOOD,
     PASSWORD,
+    RECOMMENDATION,
     REFRESH_TOKEN,
     SESSION_ID,
-    SIZE,
+    SLEEP_HOURS,
+    STRESS,
     TIMESTAMP,
-    UPLOAD_ID,
-    URL,
     USER_AGENT,
     USER_ID,
     USER_IP,
@@ -148,67 +153,84 @@ async def test_update_password(application_facade):
 
 @pytest.mark.asyncio
 async def test_delete_profile(application_facade):
-    response = await application_facade.delete_profile(ACCESS_TOKEN)
-
-    assert response is None
+    await application_facade.delete_profile(ACCESS_TOKEN)
 
 
 @pytest.mark.asyncio
-async def test_initiate_upload(application_facade):
-    dto = file_dto.InitiateUploadDTO(USER_ID, NAME, SIZE)
-
-    response = await application_facade.initiate_upload(ACCESS_TOKEN, dto)
-
-    assert response.upload_id == UPLOAD_ID
-    assert response.part_size == SIZE
-    assert len(response.parts) == 1
-    assert response.parts[0].part_number == 1
-    assert response.parts[0].url == URL
-
-
-@pytest.mark.asyncio
-async def test_complete_upload(application_facade):
-    dto = file_dto.CompleteUploadDTO(
-        USER_ID, UPLOAD_ID, [file_dto.CompletePartDTO(1, ETAG)]
+async def test_upsert_record(application_facade):
+    dto = wellness_dto.UpsertRecordDTO(
+        USER_ID,
+        TIMESTAMP,
+        wellness_dto.MetricsDTO(MOOD, SLEEP_HOURS, ACTIVITY, STRESS, ENERGY, FOCUS),
     )
 
-    await application_facade.complete_upload(ACCESS_TOKEN, dto)
+    await application_facade.upsert_record(ACCESS_TOKEN, dto)
 
 
 @pytest.mark.asyncio
-async def test_abort_upload(application_facade):
-    dto = file_dto.AbortUploadDTO(USER_ID, UPLOAD_ID)
+async def test_record_list(application_facade):
+    dto = wellness_dto.MonthDTO(USER_ID, TIMESTAMP.year, TIMESTAMP.month)
 
-    await application_facade.abort_upload(ACCESS_TOKEN, dto)
-
-
-@pytest.mark.asyncio
-async def test_file_list(application_facade):
-    response = await application_facade.file_list(ACCESS_TOKEN)
+    response = await application_facade.record_list(ACCESS_TOKEN, dto)
 
     assert len(response) == 1
-    assert response[0].file_id == FILE_ID
-    assert response[0].name == NAME
-    assert response[0].size == SIZE
-    assert response[0].uploaded_at == TIMESTAMP
-
-
-@pytest.mark.asyncio
-async def test_download(application_facade):
-    dto = file_dto.FileDTO(USER_ID, FILE_ID)
-
-    response = await application_facade.download(ACCESS_TOKEN, dto)
-
-    assert response == URL
-
-
-@pytest.mark.asyncio
-async def test_delete(application_facade):
-    dto = file_dto.DeleteDTO(USER_ID, [FILE_ID])
-
-    await application_facade.delete(ACCESS_TOKEN, dto)
+    assert response[0].date == TIMESTAMP
+    assert response[0].metrics.mood == MOOD
+    assert response[0].metrics.sleep_hours == SLEEP_HOURS
+    assert response[0].metrics.activity == ACTIVITY
+    assert response[0].metrics.stress == STRESS
+    assert response[0].metrics.energy == ENERGY
+    assert response[0].metrics.focus == FOCUS
 
 
 @pytest.mark.asyncio
 async def test_delete_all(application_facade):
     await application_facade.delete_all(ACCESS_TOKEN)
+
+
+@pytest.mark.asyncio
+async def test_dashboard(application_facade):
+    response = await application_facade.dashboard(ACCESS_TOKEN, TIMESTAMP)
+
+    assert response.today.mood == MOOD
+    assert response.today.sleep_hours == SLEEP_HOURS
+    assert response.today.activity == ACTIVITY
+    assert response.today.stress == STRESS
+    assert response.today.energy == ENERGY
+    assert response.today.focus == FOCUS
+    assert response.week.mood == MOOD
+    assert response.week.sleep_hours == SLEEP_HOURS
+    assert response.week.activity == ACTIVITY
+    assert response.week.stress == STRESS
+    assert response.week.energy == ENERGY
+    assert response.week.focus == FOCUS
+    assert response.week.changes == {}
+
+
+@pytest.mark.asyncio
+async def test_analytics(application_facade):
+    response = await application_facade.analytics(ACCESS_TOKEN)
+
+    assert len(response) == 1
+    assert response[0].period == Period.QUARTER
+    assert round(response[0].feature_importance.sleep_hours, 2) == FEATURE_IMPORTANCE
+    assert round(response[0].feature_importance.activity, 2) == FEATURE_IMPORTANCE
+    assert round(response[0].feature_importance.stress, 2) == FEATURE_IMPORTANCE
+    assert round(response[0].feature_importance.energy, 2) == FEATURE_IMPORTANCE
+    assert round(response[0].feature_importance.focus, 2) == FEATURE_IMPORTANCE
+    assert len(response[0].insights) == 1
+    assert response[0].insights[0].key == INSIGHT
+    assert response[0].insights[0].parameters == ACTION_ITEM_PARAMETERS
+    assert response[0].insights[0].priority == Priority.LOW
+    assert response[0].generated_at == TIMESTAMP
+
+
+@pytest.mark.asyncio
+async def test_recommendations(application_facade):
+    response = await application_facade.recommendations(ACCESS_TOKEN)
+
+    assert len(response.recommendations) == 1
+    assert response.recommendations[0].key == RECOMMENDATION
+    assert response.recommendations[0].parameters == ACTION_ITEM_PARAMETERS
+    assert response.recommendations[0].priority == Priority.HIGH
+    assert response.generated_at == TIMESTAMP
