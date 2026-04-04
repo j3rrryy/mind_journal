@@ -6,6 +6,7 @@ from typing import cast
 import dramatiq
 from cashews.backends.redis.client_side import BcastClientSide
 
+from settings import Settings
 from utils import analytics_scheduler_key
 
 from ..container import get_cache, get_wellness_repository
@@ -34,7 +35,7 @@ async def sync_scheduler() -> None:
             now = int(time.time())
             pipe = redis_client.pipeline()
             for user_id in new_users:
-                random_offset = random.randint(0, 86400)
+                random_offset = 0 if Settings.DEBUG else random.randint(0, 86400)
                 pipe.zadd(scheduler_key, {user_id: now + random_offset})
             await pipe.execute()
             logger.info(f"Added {len(new_users)} new users to scheduler")

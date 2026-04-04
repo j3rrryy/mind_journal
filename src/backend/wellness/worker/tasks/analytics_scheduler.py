@@ -41,11 +41,7 @@ async def analytics_scheduler() -> None:
     async with cache.lock(scheduler_key, 60, check_interval=30):
         now = int(time.time())
         due_users = await redis_client.zrangebyscore(
-            scheduler_key,
-            min=0,
-            max=now,
-            start=0,
-            num=Settings.SCHEDULER_BATCH_SIZE,
+            scheduler_key, 0, now, 0, Settings.SCHEDULER_BATCH_SIZE
         )
 
         if not due_users:
@@ -61,7 +57,9 @@ async def analytics_scheduler() -> None:
             _process_analytics(analytics, user_id, now)
             _process_recommendations(recommendations, user_id, now)
 
-            next_run = now + 86400 + random.randint(-3600, 3600)
+            next_run = (
+                now if Settings.DEBUG else now + 86400 + random.randint(-3600, 3600)
+            )
             await redis_client.zadd(scheduler_key, {user_id: next_run})
 
 
