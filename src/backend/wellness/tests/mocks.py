@@ -1,29 +1,23 @@
 from datetime import datetime
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 from cashews import Cache
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from dto import base as base_dto
 from dto import response as response_dto
-from repository import TokenPair, User, WellnessRepository
+from repository import Record, WellnessRepository
 
-ACCESS_TOKEN = "eyJ0eXBlIjowLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.fyxQuUSic9USlnl9vXYYIelRBTaxsdILiosQHVIOUlU"
-REFRESH_TOKEN = "eyJ0eXBlIjoxLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.Cz6F9m9TJP76hzcyst0xE9vp6RmXtGIhAXaNqJWrJL8"
-CONFIRMATION_TOKEN = "eyJ0eXBlIjoyLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.1ukhU0OncZBofD_z3O5q5wrhoHaRm_RtAZAtqxI6CUY"
-CODE = "123456"
-
+TIMESTAMP = datetime.fromisoformat("2000-01-01T00:02:03Z")
 USER_ID = "00e51a90-0f94-4ecb-8dd1-399ba409508e"
-USERNAME = "test_username"
-EMAIL = "test@example.com"
-PASSWORD = "p@ssw0rd"
-TIMESTAMP = datetime.fromisoformat("1970-01-01T00:02:03Z")
-
-SESSION_ID = "13bcdea3-dd61-40fb-8f1f-f9546fd8ffc5"
-USER_IP = "127.0.0.1"
-USER_AGENT = (
-    "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
-)
-BROWSER = "Firefox 47.0, Windows 7"
+MOOD = 7
+SLEEP_HOURS = 6.5
+ACTIVITY = 3
+STRESS = 9
+ENERGY = 5
+FOCUS = 8
+ACTION_ITEM_PARAMETERS = {"param1": 2.0, "param2": 1.5}
 
 
 def create_session() -> AsyncSession:
@@ -43,59 +37,63 @@ def create_cache() -> Cache:
 
 def create_wellness_repository() -> WellnessRepository:
     crud = AsyncMock(spec=WellnessRepository)
-    crud.register = AsyncMock(return_value=USER_ID)
-    crud.session_list = AsyncMock(
+    crud.upsert_record = AsyncMock(return_value=None)
+    crud.record_list = AsyncMock(
         return_value=(
             [
-                response_dto.SessionInfoResponseDTO(
-                    SESSION_ID,
-                    USER_ID,
-                    ACCESS_TOKEN,
-                    REFRESH_TOKEN,
-                    USER_IP,
-                    BROWSER,
+                response_dto.RecordInfoResponseDTO(
                     TIMESTAMP,
+                    base_dto.MetricsDTO(
+                        MOOD, SLEEP_HOURS, ACTIVITY, STRESS, ENERGY, FOCUS
+                    ),
                 )
             ]
         )
     )
-    crud.profile_by_user_id = AsyncMock(
-        return_value=response_dto.ProfileResponseDTO(
-            USER_ID, USERNAME, EMAIL, get_password_hash(PASSWORD), False, TIMESTAMP
+    crud.delete_all = AsyncMock(return_value=None)
+    crud.dashboard = AsyncMock(
+        return_value=response_dto.DashboardResponseDTO(
+            base_dto.MetricsDTO(MOOD, SLEEP_HOURS, ACTIVITY, STRESS, ENERGY, FOCUS),
+            response_dto.WeeklyAveragesResponseDTO(
+                MOOD, SLEEP_HOURS, ACTIVITY, STRESS, ENERGY, FOCUS, {}
+            ),
         )
     )
-    crud.profile_by_username = AsyncMock(
-        return_value=response_dto.ProfileResponseDTO(
-            USER_ID, USERNAME, EMAIL, get_password_hash(PASSWORD), False, TIMESTAMP
-        )
-    )
-    crud.profile_by_email = AsyncMock(
-        return_value=response_dto.ProfileResponseDTO(
-            USER_ID, USERNAME, EMAIL, get_password_hash(PASSWORD), False, TIMESTAMP
-        )
-    )
-    crud.update_email = AsyncMock(return_value=USERNAME)
+    crud.get_all_user_ids = AsyncMock(return_value=[USER_ID])
     return crud
 
 
-def create_user() -> User:
-    return User(
+def create_record() -> Record:
+    return Record(
+        date=TIMESTAMP.date(),
         user_id=USER_ID,
-        username=USERNAME,
-        email=EMAIL,
-        password=get_password_hash(PASSWORD),
-        email_confirmed=False,
-        registered_at=TIMESTAMP,
+        mood=MOOD,
+        sleep_hours=SLEEP_HOURS,
+        activity=ACTIVITY,
+        stress=STRESS,
+        energy=ENERGY,
+        focus=FOCUS,
     )
 
 
-def create_token_pair() -> TokenPair:
-    return TokenPair(
-        session_id=SESSION_ID,
-        user_id=USER_ID,
-        access_token=ACCESS_TOKEN,
-        refresh_token=REFRESH_TOKEN,
-        user_ip=USER_IP,
-        browser=BROWSER,
-        created_at=TIMESTAMP,
-    )
+def create_dashboard_row() -> Any:
+    row = MagicMock()
+    row.today_mood = MOOD
+    row.today_sleep_hours = SLEEP_HOURS
+    row.today_activity = ACTIVITY
+    row.today_stress = STRESS
+    row.today_energy = ENERGY
+    row.today_focus = FOCUS
+    row.avg_mood = 6.0
+    row.avg_sleep_hours = 7.5
+    row.avg_activity = 5.0
+    row.avg_stress = 4.0
+    row.avg_energy = 5.0
+    row.avg_focus = 5.0
+    row.prev_mood = 5.0
+    row.prev_sleep_hours = 7.0
+    row.prev_activity = 4.5
+    row.prev_stress = 4.5
+    row.prev_energy = 4.5
+    row.prev_focus = 4.5
+    return row

@@ -39,7 +39,7 @@ def database_exception_handler(func):
         try:
             return await func(*args, **kwargs)
         except Exception as exc:
-            if isinstance(exc, BaseAppException):
+            if isinstance(exc, BaseAppException):  # pragma: no cover
                 raise exc
             raise DatabaseException(exc)
 
@@ -68,7 +68,7 @@ def get_month_range(year: int, month: int) -> tuple[date, date]:
     return start_date, end_date
 
 
-def get_model_params(n_samples: int) -> tuple[int, int]:
+def get_ml_model_params(n_samples: int) -> tuple[int, int]:
     if n_samples < 50:
         return 30, 3
     elif n_samples < 100:

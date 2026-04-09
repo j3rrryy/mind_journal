@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 
 from dto import response as response_dto
 from enums import Insight, Priority
-from utils import get_model_params
+from utils import get_ml_model_params
 
 
 def generate_advanced_insights(
@@ -42,7 +42,7 @@ def _detect_anomalies(
     train_data = metrics[-train_len:]
     test_data = metrics[-7:]
 
-    n_estimators, _ = get_model_params(n)
+    n_estimators, _ = get_ml_model_params(n)
     model = IsolationForest(
         n_estimators=n_estimators,
         contamination=min(0.2, max(0.05, 10.0 / n)),
@@ -136,7 +136,7 @@ def _predict_trends(
     x = np.arange(n).reshape(-1, 1).astype(np.float64)
 
     if n >= 50:
-        n_estimators, max_depth = get_model_params(n)
+        n_estimators, max_depth = get_ml_model_params(n)
         model = RandomForestRegressor(
             n_estimators=n_estimators,
             max_depth=max_depth,

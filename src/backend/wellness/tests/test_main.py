@@ -7,20 +7,20 @@ from py_async_grpc_prometheus.prometheus_async_server_interceptor import (
 )
 
 import main
-from controller import AuthController
-from proto import AuthServicer
+from controller import WellnessController
+from proto import WellnessServicer
 from settings import Settings
 from utils import ExceptionInterceptor
 
 
 @pytest.mark.asyncio
 @patch("main.grpc.aio.server")
-@patch("main.add_AuthServicer_to_server")
+@patch("main.add_WellnessServicer_to_server")
 async def test_start_grpc_server(mock_add_servicer, mock_grpc_server):
     mock_server_instance = AsyncMock(spec=grpc.aio.Server)
     mock_grpc_server.return_value = mock_server_instance
 
-    await main.start_grpc_server(MagicMock(spec=AuthController))
+    await main.start_grpc_server(MagicMock(spec=WellnessController))
 
     mock_grpc_server.assert_called_once_with(
         interceptors=ANY,
@@ -38,7 +38,7 @@ async def test_start_grpc_server(mock_add_servicer, mock_grpc_server):
     assert isinstance(kwargs["interceptors"][1], ExceptionInterceptor)
     args, _ = mock_add_servicer.call_args
     assert len(args) == 2
-    assert isinstance(args[0], AuthServicer)
+    assert isinstance(args[0], WellnessServicer)
     assert isinstance(args[1], grpc.aio.Server)
     mock_server_instance.add_insecure_port.assert_called_once_with(
         Settings.GRPC_SERVER_ADDRESS

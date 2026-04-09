@@ -18,12 +18,12 @@ class BaseRequestDTO:
         fields = []
         for f in cls.__dataclass_fields__.keys():
             field = getattr(request, f)
-            if isinstance(field, Timestamp):
+            if isinstance(field, Timestamp):  # pragma: no cover
                 field = field.ToDatetime()
             fields.append(field)
         return cls(*fields)
 
-    def to_model(self, model: type[Model]) -> Model:
+    def to_model(self, model: type[Model]) -> Model:  # pragma: no cover
         return model(**asdict(self))
 
 

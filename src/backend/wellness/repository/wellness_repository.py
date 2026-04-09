@@ -4,6 +4,7 @@ from typing import Any
 from sqlalchemy import delete, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
+from dto import base as base_dto
 from dto import request as request_dto
 from dto import response as response_dto
 from enums import Metric
@@ -90,7 +91,7 @@ class WellnessRepository(WellnessRepositoryProtocol):
             row: Any = (await session.execute(query, params)).first()
 
         today = (
-            response_dto.MetricsDTO(
+            base_dto.MetricsDTO(
                 row.today_mood,
                 row.today_sleep_hours,
                 row.today_activity,

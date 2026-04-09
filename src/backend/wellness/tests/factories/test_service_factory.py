@@ -11,7 +11,7 @@ async def test_service_factory_initialize_success():
 
     with (
         patch.object(
-            service_factory._auth_repository_factory,
+            service_factory._wellness_repository_factory,
             "initialize",
             new_callable=AsyncMock,
         ) as mock_repository_init,
@@ -30,7 +30,7 @@ async def test_service_factory_initialize_exception():
     service_factory = ServiceFactory()
     with (
         patch.object(
-            service_factory._auth_repository_factory,
+            service_factory._wellness_repository_factory,
             "initialize",
             new_callable=AsyncMock,
         ) as mock_repository_init,
@@ -53,7 +53,9 @@ async def test_service_factory_close():
 
     with (
         patch.object(
-            service_factory._auth_repository_factory, "close", new_callable=AsyncMock
+            service_factory._wellness_repository_factory,
+            "close",
+            new_callable=AsyncMock,
         ) as mock_repository_close,
         patch.object(
             service_factory._cache_factory, "close", new_callable=AsyncMock
@@ -65,16 +67,16 @@ async def test_service_factory_close():
         mock_cache_close.assert_awaited_once()
 
 
-def test_service_factory_get_auth_repository():
+def test_service_factory_get_wellness_repository():
     service_factory = ServiceFactory()
     mock_repository = MagicMock()
 
     with patch.object(
-        service_factory._auth_repository_factory,
-        "get_auth_repository",
+        service_factory._wellness_repository_factory,
+        "get_wellness_repository",
         return_value=mock_repository,
     ) as mock_get:
-        result = service_factory.get_auth_repository()
+        result = service_factory.get_wellness_repository()
 
         assert result == mock_repository
         mock_get.assert_called_once()
@@ -93,32 +95,35 @@ def test_service_factory_get_cache():
         mock_get.assert_called_once()
 
 
-def test_service_factory_get_auth_controller():
+def test_service_factory_get_wellness_controller():
     service_factory = ServiceFactory()
-    mock_auth_service = MagicMock()
-    mock_auth_controller = MagicMock()
+    mock_wellness_service = MagicMock()
+    mock_wellness_controller = MagicMock()
 
     with (
-        patch.object(service_factory, "get_auth_repository"),
+        patch.object(service_factory, "get_wellness_repository"),
         patch.object(service_factory, "get_cache"),
-        patch("factories.service_factory.AuthService", return_value=mock_auth_service),
         patch(
-            "factories.service_factory.AuthController",
-            return_value=mock_auth_controller,
-        ) as mock_auth_controller_class,
+            "factories.service_factory.WellnessService",
+            return_value=mock_wellness_service,
+        ),
+        patch(
+            "factories.service_factory.WellnessController",
+            return_value=mock_wellness_controller,
+        ) as mock_wellness_controller_class,
     ):
-        result = service_factory.get_auth_controller()
+        result = service_factory.get_wellness_controller()
 
-        assert result == mock_auth_controller
-        mock_auth_controller_class.assert_called_once_with(mock_auth_service)
+        assert result == mock_wellness_controller
+        mock_wellness_controller_class.assert_called_once_with(mock_wellness_service)
 
 
-def test_service_factory_get_auth_controller_cached():
+def test_service_factory_get_wellness_controller_cached():
     service_factory = ServiceFactory()
     mock_controller = MagicMock()
-    service_factory._auth_controller = mock_controller
+    service_factory._wellness_controller = mock_controller
 
-    result = service_factory.get_auth_controller()
+    result = service_factory.get_wellness_controller()
 
     assert result == mock_controller
 
@@ -137,7 +142,7 @@ async def test_service_factory_get_is_ready_exception():
     service_factory = ServiceFactory()
     mock_is_ready = MagicMock()
     mock_is_ready.side_effect = Exception("Healthcheck timeout")
-    service_factory._auth_repository_factory.is_ready = mock_is_ready
+    service_factory._wellness_repository_factory.is_ready = mock_is_ready
 
     is_ready = await service_factory.get_is_ready()()
 

@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 from dto import response as response_dto
 from enums import AnalyticsLevel
-from utils import get_model_params
+from utils import get_ml_model_params
 
 
 def compute_feature_importance(
@@ -53,7 +53,7 @@ def _basic_importance(
 def _advanced_importance(
     x: np.ndarray, y: np.ndarray
 ) -> response_dto.FeatureImportanceResponseDTO:
-    n_estimators, max_depth = get_model_params(len(x))
+    n_estimators, max_depth = get_ml_model_params(len(x))
     model = RandomForestRegressor(
         n_estimators=n_estimators,
         max_depth=max_depth,

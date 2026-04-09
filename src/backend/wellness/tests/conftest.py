@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 from cashews import Cache
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
@@ -5,15 +7,15 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 from controller import WellnessController
 from proto import WellnessServicer
 from protocols import WellnessRepositoryProtocol, WellnessServiceProtocol
-from repository import TokenPair, User, WellnessRepository
+from repository import Record, WellnessRepository
 from service import WellnessService
 
 from .mocks import (
     create_cache,
+    create_dashboard_row,
+    create_record,
     create_session,
     create_sessionmaker,
-    create_token_pair,
-    create_user,
     create_wellness_repository,
 )
 
@@ -54,10 +56,10 @@ def wellness_controller(wellness_service) -> WellnessServicer:
 
 
 @pytest.fixture
-def user() -> User:
-    return create_user()
+def record() -> Record:
+    return create_record()
 
 
 @pytest.fixture
-def token_pair() -> TokenPair:
-    return create_token_pair()
+def dashboard_row() -> Any:
+    return create_dashboard_row()
