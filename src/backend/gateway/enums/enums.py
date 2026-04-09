@@ -98,6 +98,8 @@ class Insight(str, Enum):
     FOCUS_BELOW_AVG = "focus_below_avg"
     UNUSUAL_HIGH_FOCUS = "unusual_high_focus"
     UNUSUAL_LOW_FOCUS = "unusual_low_focus"
+    FOCUS_EXPECTED_UP = "focus_expected_up"
+    FOCUS_EXPECTED_DOWN = "focus_expected_down"
 
 
 class Recommendation(str, Enum):

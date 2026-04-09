@@ -55,4 +55,4 @@ def generate_recommendations(
             )
         )
     recommendations.extend(generate_preventive_recommendations(week_insights))
-    return recommendations
+    return list({rec.key: rec for rec in recommendations}.values())

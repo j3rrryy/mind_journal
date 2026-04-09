@@ -104,6 +104,8 @@ class Insight(Enum):
     FOCUS_BELOW_AVG = 59
     UNUSUAL_HIGH_FOCUS = 60
     UNUSUAL_LOW_FOCUS = 61
+    FOCUS_EXPECTED_UP = 62
+    FOCUS_EXPECTED_DOWN = 63
 
 
 class Recommendation(Enum):

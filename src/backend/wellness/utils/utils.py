@@ -66,3 +66,14 @@ def get_month_range(year: int, month: int) -> tuple[date, date]:
     else:
         end_date = date(year, month + 1, 1)
     return start_date, end_date
+
+
+def get_model_params(n_samples: int) -> tuple[int, int]:
+    if n_samples < 50:
+        return 30, 3
+    elif n_samples < 100:
+        return 50, 5
+    elif n_samples < 200:
+        return 100, 7
+    else:
+        return 150, 10

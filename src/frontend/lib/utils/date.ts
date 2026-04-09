@@ -1,8 +1,13 @@
 export function formatDate(dateString: string): string {
-  if (!dateString.endsWith("Z") && !/[\+\-]\d{2}:\d{2}/.test(dateString)) {
-    dateString += "Z";
+  let isoString = dateString;
+  if (!dateString.includes("T")) {
+    isoString = dateString + "T00:00:00Z";
+  } else if (!dateString.includes("Z") && !dateString.includes("+")) {
+    isoString = dateString + "Z";
   }
-  return new Date(dateString).toLocaleString("ru-RU", {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return dateString;
+  return date.toLocaleString("ru-RU", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -13,10 +18,15 @@ export function formatDate(dateString: string): string {
 }
 
 export function formatDateShort(dateString: string, locale: string = "ru"): string {
-  if (!dateString.endsWith("Z") && !/[\+\-]\d{2}:\d{2}/.test(dateString)) {
-    dateString += "Z";
+  let isoString = dateString;
+  if (!dateString.includes("T")) {
+    isoString = dateString + "T00:00:00Z";
+  } else if (!dateString.includes("Z") && !dateString.includes("+")) {
+    isoString = dateString + "Z";
   }
-  return new Date(dateString).toLocaleDateString(locale, {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) return dateString;
+  return date.toLocaleDateString(locale, {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",

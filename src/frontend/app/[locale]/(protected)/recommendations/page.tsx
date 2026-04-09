@@ -34,7 +34,7 @@ export default function RecommendationsPage() {
             parameters: Object.fromEntries(
               Object.entries(rec.parameters).map(([key, value]) => [
                 key,
-                Math.round(value * 10) / 10,
+                key === "importance" ? Math.round(value * 100) : Math.round(value * 10) / 10,
               ])
             ),
           })),
