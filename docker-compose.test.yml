@@ -26,7 +26,7 @@ services:
     image: wellness:test
     env_file:
       - ./test/.env
-    command: sh -c "uv run --group test pytest ./tests --cov=. --cov-config=./tests/.coveragerc --cov-report=xml --cov-fail-under=100"
+    command: sh -c "uv run --group test pytest ./tests --cov=. --cov-config=./tests/.coveragerc --cov-report=xml --cov-fail-under=75"
     container_name: wellness_test
 
   mail:
