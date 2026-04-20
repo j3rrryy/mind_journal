@@ -58,7 +58,9 @@ async def analytics_scheduler() -> None:
             _process_recommendations(recommendations, user_id, now)
 
             next_run = (
-                now if Settings.DEBUG else now + 86400 + random.randint(-3600, 3600)
+                now
+                if Settings.WORKER_DEBUG
+                else now + 86400 + random.randint(-3600, 3600)
             )
             await redis_client.zadd(scheduler_key, {user_id: next_run})
 

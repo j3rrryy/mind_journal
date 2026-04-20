@@ -5,7 +5,7 @@
     <img src="https://github.com/j3rrryy/mind_journal/actions/workflows/main.yml/badge.svg" alt="СI/CD">
   </a>
   <a href="https://codecov.io/gh/j3rrryy/mind_journal">
-    <img src="https://codecov.io/gh/j3rrryy/mind_journal/graph/badge.svg?token=" alt="Codecov">
+    <img src="https://codecov.io/gh/j3rrryy/mind_journal/graph/badge.svg?token=PFWPAH79T0" alt="Codecov">
   </a>
   <a href="https://nodejs.org/docs/latest-v20.x/api/index.html">
     <img src="https://img.shields.io/badge/Node.js-20-8DBB39.svg" alt="Node.js 20">
@@ -24,73 +24,90 @@
   </a>
 </p>
 
-## :book: Key features
+## :book: Ключевые особенности
 
-- Microservice architecture
-- gRPC between services
-- Main DB - PostgreSQL
-- DB for cache - Redis
-- Message broker between Gateway and Mail service - Apache Kafka
-- Monitoring - Prometheus & Grafana
-- Log aggregation - Promtail & Loki & Grafana
+- Ежедневный ввод метрик самочувствия
+- Эволюционная аналитическая система: эвристические правила → упрощенные модели → полный ML-анализ по мере накопления данных
+- Генерация инсайтов и рекомендаций
+- Визуализация метрик с помощью интерактивных графиков
+- Интернационализация: поддержка языков RU и EN
+
+- Микросервисная архитектура
+- gRPC между сервисами
+- Основная БД - PostgreSQL
+- БД для кэша - Redis
+- Брокер сообщений между API-гейтвеем и Mail-сервисом - Apache Kafka
+- Мониторинг - Prometheus & Grafana
+- Агрегация логов - Promtail & Loki & Grafana
 
 > [!NOTE]
-> Grafana located at `/admin/grafana`
+> Grafana находится по адресу `/admin/grafana`
 
-## :computer: Requirements
+## :computer: Что нужно для запуска
 
 - Docker
 
-## :hammer_and_wrench: Getting started
+## :hammer_and_wrench: Начало работы
 
-- Copy `.env` and `.env.frontend` files from `examples/dev/` to `dev/` folder and fill them in
+- **(Для dev/prod)** Скопируйте файл `.env` из `examples/<dev/prod>/` в папку `<dev/prod>/` и заполните его (для быстроты можно использовать значения из `test/.env`)
 
-- **(For dev/prod)** Copy `redis.conf` file from `examples/` to `dev/` or `prod/` folder and fill it in
+- **(Для dev/prod)** Скопируйте файл `redis.conf` из `examples/` в папку `<dev/prod>/` и заполните его
 
-- **(For prod)** Copy `.env` and `.env.frontend` files from `examples/prod/` to `prod/` folder and fill them in
+- **(Для prod)** Скопируйте файл `nginx.conf` из `examples/prod/` в папку `prod/` и заполните его
 
-- **(For prod)** Copy `nginx.conf` file from `examples/prod/` to `prod/` folder and fill it in
+- **(Для prod)** Скопируйте файл `docker-compose.cert.yml` из `examples/prod/` в папку `prod/` и заполните его
 
-- **(For prod)** Copy `docker-compose.cert.yml` file from `examples/prod/` to `prod/` folder and fill it in
+### :rocket: Запуск
 
-### :rocket: Start
+- Запуск **dev-версии**
 
-- Run the **dev ver.**
-
-  - Only app
+  - Только приложение
 
     ```shell
     docker compose -f docker-compose.dev.yml --profile app up --build -d
     ```
 
-  - App + monitoring
+  - Приложение + мониторинг
 
     ```shell
     docker compose -f docker-compose.dev.yml --profile all up --build -d
     ```
 
-- Run the **prod ver.** and get a SSL certificate
+- Запуск **prod-версии** и получение SSL-сертификата
 
-  - Create the directory on the server
+  - Создайте директорию на сервере
 
     ```shell
     mkdir -p /mind_journal/
     ```
 
-  - Use SCP to copy the prod files to the server
+  - Используйте SCP, чтобы скопировать prod-файлы на сервер
 
     ```shell
     scp -r ./prod/* <username>@<host>:/mind_journal/
     ```
 
-  - Run the deploy script
+  - Запустите deploy-скрипт
 
     ```shell
     bash deploy.sh
     ```
 
-### :x: Stop
+### :x: Остановка
 
 ```shell
 docker compose -f docker-compose.<dev/prod>.yml stop
 ```
+
+### :bar_chart: Демо
+
+- Запустите **dev-версию** с переменными окружения `WORKER_DEBUG=1` и `DEBUG=0` (это увеличит частоту обновления аналитики и рекомендаций)
+- Создайте аккаунт
+- Скопируйте ID пользователя из профиля
+- Сгенерируйте данные:
+
+  ```shell
+  docker exec -it wellness_dev uv run ./demo_generator.py --user_id <ID пользователя> --pattern stressed --anomaly-prob 0.1 --trend-strength 5 --clear
+  ```
+
+- Аналитика и рекомендации скоро появятся

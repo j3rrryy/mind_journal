@@ -240,6 +240,10 @@ export default function ProfilePage() {
           <SectionCard title={t("userInfo")}>
             <div className="space-y-3">
               <div>
+                <p className="text-sm text-text-secondary">ID</p>
+                <p className="text-lg text-text-primary">{user.user_id}</p>
+              </div>
+              <div>
                 <p className="text-sm text-text-secondary">{tc("username")}</p>
                 <p className="text-lg text-text-primary">{user.username}</p>
               </div>
