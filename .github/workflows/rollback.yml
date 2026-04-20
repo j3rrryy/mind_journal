@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [gateway, auth, wellness, mail]
+        service: [ gateway, auth, wellness, mail ]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
