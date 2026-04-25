@@ -108,7 +108,6 @@ export default function ForgotPasswordPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value.toLowerCase())}
               required
-              maxLength={EMAIL_MAX_LENGTH}
               placeholder={tc("emailPlaceholder")}
             />
           </div>

@@ -23,7 +23,7 @@ async def sync_scheduler() -> None:
     if await cache.is_locked(scheduler_key):
         return
 
-    async with cache.lock(scheduler_key, 600, False):
+    async with cache.lock(scheduler_key, 300, False):
         all_user_ids = set(await wellness_repository.get_all_user_ids())
         raw_cache_user_ids = await redis_client.zrange(scheduler_key, 0, -1)
         cache_user_ids = {user_id.decode() for user_id in raw_cache_user_ids}

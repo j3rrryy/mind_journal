@@ -30,4 +30,6 @@ broker.add_middleware(MonitoringMiddleware(service_factory.get_is_ready()))
 from .tasks import analytics_scheduler, sync_scheduler  # noqa
 
 scheduler.add_job(analytics_scheduler, "*/5 * * * *")
-scheduler.add_job(sync_scheduler, "0 0 * * *", True)
+scheduler.add_job(
+    sync_scheduler, "*/5 * * * *" if Settings.WORKER_DEBUG else "0 0 * * *", True
+)

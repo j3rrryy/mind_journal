@@ -6,6 +6,8 @@ jest.mock("next-intl", () => ({
     const translations: Record<string, string> = {
       "periods.week": "Week",
       "periods.month": "Month",
+      "periods.quarter": "Quarter",
+      "periods.half_year": "Half Year",
       "periods.year": "Year",
     };
     return translations[key] || key;
@@ -18,11 +20,13 @@ describe("PeriodSelector", () => {
       <PeriodSelector
         selectedPeriod="week"
         onPeriodChange={jest.fn()}
-        availablePeriods={["week", "month", "year"]}
+        availablePeriods={["week", "month", "quarter", "half_year", "year"]}
       />
     );
     expect(screen.getByText("Week")).toBeInTheDocument();
     expect(screen.getByText("Month")).toBeInTheDocument();
+    expect(screen.getByText("Quarter")).toBeInTheDocument();
+    expect(screen.getByText("Half Year")).toBeInTheDocument();
     expect(screen.getByText("Year")).toBeInTheDocument();
   });
 
@@ -39,18 +43,7 @@ describe("PeriodSelector", () => {
     expect(onChange).toHaveBeenCalledWith("month");
   });
 
-  it("shows data indicator for periods with data", () => {
-    render(
-      <PeriodSelector
-        selectedPeriod="week"
-        onPeriodChange={jest.fn()}
-        availablePeriods={["week", "month"]}
-      />
-    );
-    expect(screen.getByText("Month").querySelector(".animate-ping")).toBeInTheDocument();
-  });
-
-  it("does not show data indicator for selected period", () => {
+  it("disables buttons without data", () => {
     render(
       <PeriodSelector
         selectedPeriod="week"
@@ -58,7 +51,20 @@ describe("PeriodSelector", () => {
         availablePeriods={["week"]}
       />
     );
-    const button = screen.getByText("Week");
-    expect(button.querySelector(".animate-ping")).not.toBeInTheDocument();
+    const weekButton = screen.getByText("Week");
+    const monthButton = screen.getByText("Month");
+    const yearButton = screen.getByText("Year");
+    expect(weekButton).not.toBeDisabled();
+    expect(monthButton).toBeDisabled();
+    expect(yearButton).toBeDisabled();
+  });
+
+  it("does not call onChange when clicking disabled button", () => {
+    const onChange = jest.fn();
+    render(
+      <PeriodSelector selectedPeriod="week" onPeriodChange={onChange} availablePeriods={["week"]} />
+    );
+    fireEvent.click(screen.getByText("Month"));
+    expect(onChange).not.toHaveBeenCalled();
   });
 });

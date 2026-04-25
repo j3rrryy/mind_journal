@@ -25,21 +25,17 @@ export function PeriodSelector({
         return (
           <button
             key={period}
-            onClick={() => onPeriodChange(period)}
+            onClick={() => hasData && onPeriodChange(period)}
+            disabled={!hasData}
             className={`relative rounded-lg px-4 py-2 transition-colors ${
               isSelected
                 ? "bg-indigo-600 text-white dark:bg-indigo-500"
-                : "border border-gray-300 bg-white text-text-primary hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-text-primary dark:hover:bg-gray-700"
+                : hasData
+                  ? "border border-gray-300 bg-white text-text-primary hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-text-primary dark:hover:bg-gray-700"
+                  : "cursor-not-allowed border border-gray-200 bg-gray-100 text-text-muted dark:border-gray-700 dark:bg-gray-900 dark:text-gray-500"
             }`}
           >
             {t(`periods.${period}`)}
-
-            {hasData && !isSelected && (
-              <span className="absolute -top-1 -right-1">
-                <span className="absolute inset-0 h-3 w-3 animate-ping rounded-full bg-indigo-400" />
-                <span className="relative block h-3 w-3 rounded-full bg-indigo-500" />
-              </span>
-            )}
           </button>
         );
       })}

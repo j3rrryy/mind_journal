@@ -265,7 +265,6 @@ export default function ProfilePage() {
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value.toLowerCase())}
                 placeholder={tc("emailPlaceholder")}
-                maxLength={EMAIL_MAX_LENGTH}
                 inputSize="sm"
               />
               <Button onClick={handleUpdateEmail} disabled={loading || !newEmail}>
@@ -310,22 +309,16 @@ export default function ProfilePage() {
                 value={oldPassword}
                 onChange={(e) => setOldPassword(e.target.value)}
                 placeholder={tc("oldPasswordPlaceholder")}
-                minLength={PASSWORD_MIN_LENGTH}
-                maxLength={PASSWORD_MAX_LENGTH}
               />
               <PasswordInput
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder={tc("newPasswordPlaceholder")}
-                minLength={PASSWORD_MIN_LENGTH}
-                maxLength={PASSWORD_MAX_LENGTH}
               />
               <PasswordInput
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder={tc("confirmPasswordPlaceholder")}
-                minLength={PASSWORD_MIN_LENGTH}
-                maxLength={PASSWORD_MAX_LENGTH}
               />
               <Button
                 onClick={handleUpdatePassword}

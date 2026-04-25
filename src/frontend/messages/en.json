@@ -41,6 +41,8 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "passwordTooLong": "Password must be at most 128 characters",
     "passwordMismatch": "Passwords do not match",
+    "acceptTerms": "I accept the User Agreement",
+    "acceptTermsRequired": "You must accept the User Agreement",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "register": "Sign Up",
@@ -50,7 +52,9 @@
     "backToForgot": "Back",
     "addRecord": "Add record",
     "editRecord": "Edit record",
-    "lastUpdated": "Updated: {date}"
+    "lastUpdated": "Updated: {date}",
+    "notEnoughData": "Not enough data",
+    "notEnoughDataDesc": "Continue daily logging"
   },
   "landing": {
     "hero": {
@@ -208,7 +212,6 @@
     "featureImportance": "Feature Importance",
     "insights": "Insights",
     "insightsEmpty": "No new insights",
-    "noDataForPeriod": "No data for selected period",
     "goToRecommendations": "Want personalized recommendations?",
     "goToRecommendationsDesc": "Based on analysis of your data",
     "periods": {
@@ -296,8 +299,6 @@
     "highPriority": "High priority",
     "mediumPriority": "Medium priority",
     "lowPriority": "Low priority",
-    "notEnoughData": "Not enough data",
-    "notEnoughDataDesc": "More records are needed to generate personalized recommendations. Keep logging your daily well-being and the system will start providing recommendations.",
     "tip": "Tip",
     "tipDesc": "Recommendations are automatically updated based on your latest data. The more records you add, the more accurate the recommendations will be.",
     "items": {

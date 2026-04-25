@@ -90,8 +90,6 @@ export default function LoginPage() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            pattern="^[a-zA-Z0-9_-]{3,30}$"
-            maxLength={30}
             placeholder={tc("usernamePlaceholder")}
           />
         </div>
@@ -110,8 +108,6 @@ export default function LoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={PASSWORD_MIN_LENGTH}
-            maxLength={PASSWORD_MAX_LENGTH}
             placeholder={tc("passwordPlaceholder")}
           />
         </div>

@@ -59,6 +59,13 @@ export default function AnalyticsPage() {
     fetchAnalytics();
   }, [fetchAnalytics]);
 
+  const availablePeriods = useMemo(() => analytics.map((a) => a.period), [analytics]);
+  useEffect(() => {
+    if (availablePeriods.length > 0 && !availablePeriods.includes(selectedPeriod)) {
+      setSelectedPeriod(availablePeriods[0]);
+    }
+  }, [availablePeriods, selectedPeriod]);
+
   const currentAnalytics = useMemo(() => {
     return analytics.find((a) => a.period === selectedPeriod);
   }, [analytics, selectedPeriod]);
@@ -81,71 +88,77 @@ export default function AnalyticsPage() {
 
       {error && <AlertMessage message={error} variant="danger" />}
 
-      <PeriodSelector
-        selectedPeriod={selectedPeriod}
-        onPeriodChange={setSelectedPeriod}
-        availablePeriods={analytics.map((a) => a.period)}
-      />
-
-      {currentAnalytics?.generated_at && (
-        <div className="text-sm text-text-secondary">
-          {tc("lastUpdated", { date: formatDate(currentAnalytics.generated_at) })}
-        </div>
-      )}
-
-      {currentAnalytics ? (
+      {analytics.length > 0 ? (
         <>
-          <SectionCard title={t("featureImportance")}>
-            <div className="space-y-4">
-              {Object.entries(currentAnalytics.feature_importance).map(([key, value]) => {
-                const label =
-                  METRIC_LABELS[key as MetricKey]?.[
-                    locale as keyof (typeof METRIC_LABELS)[MetricKey]
-                  ] || key;
-                const percentage = (value * 100).toFixed(0);
+          <PeriodSelector
+            selectedPeriod={selectedPeriod}
+            onPeriodChange={setSelectedPeriod}
+            availablePeriods={analytics.map((a) => a.period)}
+          />
 
-                return (
-                  <div key={key}>
-                    <div className="mb-1 flex justify-between">
-                      <span className="text-text-label">{label}</span>
-                      <span className="text-sm text-text-secondary">{percentage}%</span>
-                    </div>
-                    <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
-                      <div
-                        className="h-2 rounded-full bg-indigo-600 transition-all dark:bg-indigo-500"
-                        style={{ width: `${percentage}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+          {currentAnalytics?.generated_at && (
+            <div className="text-sm text-text-secondary">
+              {tc("lastUpdated", { date: formatDate(currentAnalytics.generated_at) })}
             </div>
-          </SectionCard>
+          )}
 
-          <SectionCard title={t("insights")}>
-            {sortedInsights.length > 0 ? (
-              <div className="space-y-4">
-                {sortedInsights.map((insight, index) => (
-                  <div
-                    key={index}
-                    className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-700/50"
-                  >
-                    <div className="mb-2 flex items-center gap-2">
-                      <PriorityBadge priority={insight.priority} />
-                    </div>
-                    <p className="text-text-primary">
-                      {t(`items.${insight.insight}`, insight.parameters)}
-                    </p>
+          {currentAnalytics ? (
+            <>
+              <SectionCard title={t("featureImportance")}>
+                <div className="space-y-4">
+                  {Object.entries(currentAnalytics.feature_importance).map(([key, value]) => {
+                    const label =
+                      METRIC_LABELS[key as MetricKey]?.[
+                        locale as keyof (typeof METRIC_LABELS)[MetricKey]
+                      ] || key;
+                    const percentage = (value * 100).toFixed(0);
+
+                    return (
+                      <div key={key}>
+                        <div className="mb-1 flex justify-between">
+                          <span className="text-text-label">{label}</span>
+                          <span className="text-sm text-text-secondary">{percentage}%</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+                          <div
+                            className="h-2 rounded-full bg-indigo-600 transition-all dark:bg-indigo-500"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </SectionCard>
+
+              <SectionCard title={t("insights")}>
+                {sortedInsights.length > 0 ? (
+                  <div className="space-y-4">
+                    {sortedInsights.map((insight, index) => (
+                      <div
+                        key={index}
+                        className="rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-700/50"
+                      >
+                        <div className="mb-2 flex items-center gap-2">
+                          <PriorityBadge priority={insight.priority} />
+                        </div>
+                        <p className="text-text-primary">
+                          {t(`items.${insight.insight}`, insight.parameters)}
+                        </p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <EmptyState icon="📊" title={t("insightsEmpty")} />
-            )}
-          </SectionCard>
+                ) : (
+                  <EmptyState icon="📊" title={t("insightsEmpty")} />
+                )}
+              </SectionCard>
+            </>
+          ) : (
+            <></>
+          )}
         </>
       ) : (
-        <EmptyState icon="📊" title={t("noDataForPeriod")} />
+        <EmptyState icon="📊" title={tc("notEnoughData")} description={tc("notEnoughDataDesc")} />
       )}
 
       <TipCard

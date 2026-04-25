@@ -18,6 +18,7 @@ import {
   EMAIL_MAX_LENGTH,
 } from "@/lib/constants/validation";
 import PasswordInput from "@/components/form/PasswordInput";
+import { Checkbox } from "@/components/form/Checkbox";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -67,6 +69,11 @@ export default function RegisterPage() {
         return;
       }
 
+      if (!acceptedTerms) {
+        setError(tc("acceptTermsRequired"));
+        return;
+      }
+
       setIsLoading(true);
 
       try {
@@ -89,7 +96,7 @@ export default function RegisterPage() {
         setIsLoading(false);
       }
     },
-    [username, email, password, confirmPassword, locale, router, t, tc, refreshUser]
+    [username, email, password, confirmPassword, acceptedTerms, locale, router, t, tc, refreshUser]
   );
 
   return (
@@ -109,8 +116,6 @@ export default function RegisterPage() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
-            pattern="^[a-zA-Z0-9_-]{3,30}$"
-            maxLength={30}
             placeholder={tc("usernamePlaceholder")}
           />
         </div>
@@ -125,7 +130,6 @@ export default function RegisterPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value.toLowerCase())}
             required
-            maxLength={EMAIL_MAX_LENGTH}
             placeholder={tc("emailPlaceholder")}
           />
         </div>
@@ -137,8 +141,6 @@ export default function RegisterPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={PASSWORD_MIN_LENGTH}
-            maxLength={PASSWORD_MAX_LENGTH}
             placeholder={tc("passwordPlaceholder")}
           />
         </div>
@@ -150,9 +152,20 @@ export default function RegisterPage() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            maxLength={PASSWORD_MAX_LENGTH}
             placeholder={tc("confirmPasswordPlaceholder")}
           />
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="terms"
+            checked={acceptedTerms}
+            onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+            required
+          />
+          <label htmlFor="terms" className="text-sm text-text-label">
+            {tc("acceptTerms")}
+          </label>
         </div>
 
         <Button type="submit" disabled={isLoading} className="w-full" size="lg">
