@@ -149,7 +149,7 @@ export default function AnalyticsPage() {
                     ))}
                   </div>
                 ) : (
-                  <EmptyState icon="📊" title={t("insightsEmpty")} />
+                  <EmptyState icon="chart" title={t("insightsEmpty")} />
                 )}
               </SectionCard>
             </>
@@ -158,7 +158,11 @@ export default function AnalyticsPage() {
           )}
         </>
       ) : (
-        <EmptyState icon="📊" title={tc("notEnoughData")} description={tc("notEnoughDataDesc")} />
+        <EmptyState
+          icon="chart"
+          title={tc("notEnoughData")}
+          description={tc("notEnoughDataDesc")}
+        />
       )}
 
       <TipCard

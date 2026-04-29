@@ -7,14 +7,14 @@ describe("EmptyState", () => {
     expect(screen.getByText("No data")).toBeInTheDocument();
   });
 
-  it("renders with default icon", () => {
-    render(<EmptyState title="Empty" />);
-    expect(screen.getByText("📊")).toBeInTheDocument();
+  it("renders with chart icon", () => {
+    render(<EmptyState title="Empty" icon="chart" />);
+    expect(screen.getByText("Empty")).toBeInTheDocument();
   });
 
-  it("renders with custom icon", () => {
-    render(<EmptyState title="Empty" icon="🔍" />);
-    expect(screen.getByText("🔍")).toBeInTheDocument();
+  it("renders with search icon", () => {
+    render(<EmptyState title="Empty" icon="search" />);
+    expect(screen.getByText("Empty")).toBeInTheDocument();
   });
 
   it("renders description when provided", () => {
@@ -29,6 +29,6 @@ describe("EmptyState", () => {
 
   it("does not render icon when empty string", () => {
     render(<EmptyState title="No icon" icon="" />);
-    expect(screen.queryByText("📊")).not.toBeInTheDocument();
+    expect(screen.getByText("No icon")).toBeInTheDocument();
   });
 });

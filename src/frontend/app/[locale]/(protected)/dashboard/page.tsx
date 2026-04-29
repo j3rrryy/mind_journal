@@ -16,6 +16,7 @@ import { RecordModal } from "@/components/metrics/RecordModal";
 import { getTodayISO } from "@/lib/utils/date";
 import type { MetricKey } from "@/lib/constants/metrics";
 import type { Dashboard, Metrics } from "@/types";
+import { Calendar, TrendingUp, Lightbulb } from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -95,21 +96,21 @@ export default function DashboardPage() {
     () => [
       {
         href: `/${locale}/calendar`,
-        icon: "📅",
+        icon: Calendar,
         titleKey: "calendar",
         description: t("goToCalendar"),
         color: "bg-purple-100 dark:bg-purple-900/30",
       },
       {
         href: `/${locale}/analytics`,
-        icon: "📈",
+        icon: TrendingUp,
         titleKey: "analytics",
         description: t("goToAnalytics"),
         color: "bg-blue-100 dark:bg-blue-900/30",
       },
       {
         href: `/${locale}/recommendations`,
-        icon: "💡",
+        icon: Lightbulb,
         titleKey: "recommendations",
         description: t("goToRecommendations"),
         color: "bg-yellow-100 dark:bg-yellow-900/30",
@@ -142,7 +143,7 @@ export default function DashboardPage() {
         {todayMetrics ? (
           <MetricsGrid metrics={todayMetrics} />
         ) : (
-          <EmptyState icon="📝" title={t("noRecordToday")} description="" />
+          <EmptyState icon="trend" title={t("noRecordToday")} description="" />
         )}
       </SectionCard>
 
@@ -151,19 +152,26 @@ export default function DashboardPage() {
       </SectionCard>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {navigationCards.map((card) => (
-          <Link key={card.href} href={card.href} className="group card-surface-hover">
-            <div className="flex items-center gap-4">
-              <div className={`rounded-lg ${card.color} p-3 text-2xl`}>{card.icon}</div>
-              <div>
-                <h3 className="font-semibold text-text-primary">{tn(card.titleKey)}</h3>
-                <p className="text-sm text-text-secondary group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-                  {card.description}
-                </p>
+        {navigationCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <Link key={card.href} href={card.href} className="group card-surface-hover">
+              <div className="flex items-center gap-4">
+                <div
+                  className={`rounded-lg ${card.color} p-3 text-indigo-600 dark:text-indigo-400`}
+                >
+                  <Icon size={24} />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-text-primary">{tn(card.titleKey)}</h3>
+                  <p className="text-sm text-text-secondary group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                    {card.description}
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
 
       <RecordModal

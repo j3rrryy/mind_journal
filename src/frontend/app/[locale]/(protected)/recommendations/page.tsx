@@ -91,7 +91,11 @@ export default function RecommendationsPage() {
           </div>
         </>
       ) : (
-        <EmptyState icon="📊" title={tc("notEnoughData")} description={tc("notEnoughDataDesc")} />
+        <EmptyState
+          icon="chart"
+          title={tc("notEnoughData")}
+          description={tc("notEnoughDataDesc")}
+        />
       )}
 
       <TipCard title={t("tip")} description={t("tipDesc")} />
