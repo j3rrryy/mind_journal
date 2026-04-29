@@ -10,6 +10,16 @@ import {
 } from "@/lib/utils/date";
 
 describe("formatDate", () => {
+  it("should format date in Russian locale", () => {
+    const result = formatDate("2024-06-15T10:30:00Z", "ru");
+    expect(result).toMatch(/\d{2}\.\d{2}\.\d{4}/);
+  });
+
+  it("should format date in English locale", () => {
+    const result = formatDate("2024-06-15T10:30:00Z", "en");
+    expect(result).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+  });
+
   it("should format date with Z suffix", () => {
     const result = formatDate("2024-06-15T10:30:00Z");
     expect(result).toMatch(/\d{2}\.\d{2}\.\d{4}/);
@@ -35,6 +45,16 @@ describe("formatDateShort", () => {
   it("should format date in English locale", () => {
     const result = formatDateShort("2024-06-15T10:30:00Z", "en");
     expect(result).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+  });
+
+  it("should format date with Z suffix", () => {
+    const result = formatDateShort("2024-06-15T10:30:00Z");
+    expect(result).toMatch(/\d{2}\.\d{2}\.\d{4}/);
+  });
+
+  it("should format date with timezone offset", () => {
+    const result = formatDateShort("2024-06-15T10:30:00+03:00");
+    expect(result).toMatch(/\d{2}\.\d{2}\.\d{4}/);
   });
 
   it("should add Z suffix if not present", () => {

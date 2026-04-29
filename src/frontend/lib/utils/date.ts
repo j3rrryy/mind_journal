@@ -1,4 +1,4 @@
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: string, locale: string = "ru"): string {
   let isoString = dateString;
   if (!dateString.includes("T")) {
     isoString = dateString + "T00:00:00Z";
@@ -7,7 +7,7 @@ export function formatDate(dateString: string): string {
   }
   const date = new Date(isoString);
   if (isNaN(date.getTime())) return dateString;
-  return date.toLocaleString("ru-RU", {
+  return date.toLocaleString(locale, {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",

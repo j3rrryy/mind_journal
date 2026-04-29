@@ -1,3 +1,5 @@
+from itertools import groupby
+
 import numpy as np
 from scipy import stats
 from sklearn.ensemble import IsolationForest, RandomForestRegressor
@@ -27,20 +29,21 @@ def generate_advanced_insights(
     )
 
     insights = []
-    insights.extend(_detect_anomalies(metrics))
+    insights.extend(_detect_anomalies(metrics, records))
     insights.extend(_predict_trends(metrics))
     insights.extend(_compare_with_average(metrics))
     return insights
 
 
 def _detect_anomalies(
-    metrics: np.ndarray,
+    metrics: np.ndarray, records: list[response_dto.RecordInfoResponseDTO]
 ) -> list[response_dto.ActionItemResponseDTO]:
     insights = []
     n = len(metrics)
     train_len = min(30, n)
     train_data = metrics[-train_len:]
     test_data = metrics[-7:]
+    test_records = records[-7:]
 
     n_estimators, _ = get_ml_model_params(n)
     model = IsolationForest(
@@ -52,7 +55,15 @@ def _detect_anomalies(
     model.fit(train_data)
 
     preds = model.predict(test_data)
-    anomaly_indices = np.where(preds == -1)[0]
+    anomaly_indices = [i for i, p in enumerate(preds) if p == -1]
+
+    if not anomaly_indices:
+        return insights
+
+    grouped = []
+    for _, g in groupby(enumerate(anomaly_indices), lambda ix: ix[0] - ix[1]):
+        indices = [i for _, i in g]
+        grouped.append(indices)
 
     metric_config = [
         (
@@ -99,28 +110,43 @@ def _detect_anomalies(
         ),
     ]
 
-    for idx in anomaly_indices:
-        point = test_data[idx]
+    for group in grouped:
+        start_date = str(test_records[group[0]].date.isoformat())
+        end_date = str(test_records[group[-1]].date.isoformat())
+        group_points = test_data[group]
         medians = np.median(train_data, axis=0)
+
         for col, key_high, key_low, prio_high, prio_low in metric_config:
-            if point[col] > medians[col] + 2:
+            deviations = group_points[:, col] - medians[col]
+            max_dev = np.max(deviations)
+            min_dev = np.min(deviations)
+
+            if max_dev > 2:
+                idx_max = np.argmax(deviations)
+                val = group_points[idx_max, col]
                 insights.append(
                     response_dto.ActionItemResponseDTO(
                         key_high,
                         {
-                            "value": round(float(point[col]), 1),
-                            "expected": round(float(medians[col]), 1),
+                            "value": str(round(float(val), 1)),
+                            "expected": str(round(float(medians[col]), 1)),
+                            "start_date": start_date,
+                            "end_date": end_date,
                         },
                         prio_high,
                     )
                 )
-            elif point[col] < medians[col] - 2:
+            if min_dev < -2:
+                idx_min = np.argmin(deviations)
+                val = group_points[idx_min, col]
                 insights.append(
                     response_dto.ActionItemResponseDTO(
                         key_low,
                         {
-                            "value": round(float(point[col]), 1),
-                            "expected": round(float(medians[col]), 1),
+                            "value": str(round(float(val), 1)),
+                            "expected": str(round(float(medians[col]), 1)),
+                            "start_date": start_date,
+                            "end_date": end_date,
                         },
                         prio_low,
                     )
@@ -208,13 +234,13 @@ def _predict_trends(
         if change > 0:
             insights.append(
                 response_dto.ActionItemResponseDTO(
-                    key_up, {"change": round(change, 1)}, up_priority
+                    key_up, {"change": str(round(change, 1))}, up_priority
                 )
             )
         else:
             insights.append(
                 response_dto.ActionItemResponseDTO(
-                    key_down, {"change": round(-change, 1)}, down_priority
+                    key_down, {"change": str(round(-change, 1))}, down_priority
                 )
             )
     return insights
@@ -250,8 +276,8 @@ def _compare_with_average(
                 response_dto.ActionItemResponseDTO(
                     key_above,
                     {
-                        "recent": round(float(recent_avg[col]), 1),
-                        "overall": round(float(overall_avg[col]), 1),
+                        "recent": str(round(float(recent_avg[col]), 1)),
+                        "overall": str(round(float(overall_avg[col]), 1)),
                     },
                     Priority.LOW if col != 3 else Priority.MEDIUM,
                 )
@@ -261,8 +287,8 @@ def _compare_with_average(
                 response_dto.ActionItemResponseDTO(
                     key_below,
                     {
-                        "recent": round(float(recent_avg[col]), 1),
-                        "overall": round(float(overall_avg[col]), 1),
+                        "recent": str(round(float(recent_avg[col]), 1)),
+                        "overall": str(round(float(overall_avg[col]), 1)),
                     },
                     Priority.MEDIUM if col != 3 else Priority.LOW,
                 )

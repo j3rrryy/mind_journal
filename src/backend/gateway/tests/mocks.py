@@ -42,7 +42,7 @@ FOCUS = 6
 FEATURE_IMPORTANCE = 0.2
 INSIGHT = Insight.UNUSUAL_LOW_ENERGY
 RECOMMENDATION = Recommendation.TAKE_BREAKS
-ACTION_ITEM_PARAMETERS = {"param1": 2.0, "param2": 1.5}
+ACTION_ITEM_PARAMETERS = {"param1": "2.0", "param2": "aaa"}
 
 
 def create_auth_stub_v1() -> AuthStub:

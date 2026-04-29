@@ -42,7 +42,7 @@ class Dashboard(Struct):
 
 
 class ActionItem(Struct):
-    parameters: dict[str, float]
+    parameters: dict[str, str]
     priority: Priority
 
 

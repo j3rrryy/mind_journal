@@ -124,7 +124,7 @@ class FeatureImportanceDTO(FromResponseMixin, ToSchemaMixin):
 @dataclass(slots=True, frozen=True)
 class ActionItemDTO(ToSchemaMixin):
     key: Insight | Recommendation
-    parameters: dict[str, float]
+    parameters: dict[str, str]
     priority: Priority
 
     @classmethod

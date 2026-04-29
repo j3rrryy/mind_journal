@@ -3,7 +3,7 @@ from enums import Insight, Priority, Recommendation
 
 
 def generate_preventive_recommendations(
-    week_insights: dict[Insight, dict[str, float]],
+    week_insights: dict[Insight, dict[str, str]],
 ) -> list[response_dto.ActionItemResponseDTO]:
     recommendations = []
 

@@ -102,14 +102,14 @@ def _analyze_trends(
                 trended_metrics.add(col)
                 insights.append(
                     response_dto.ActionItemResponseDTO(
-                        key_up, {"change": round(total_change, 1)}, prio_up
+                        key_up, {"change": str(round(total_change, 1))}, prio_up
                     )
                 )
             elif slope < -change_threshold:
                 trended_metrics.add(col)
                 insights.append(
                     response_dto.ActionItemResponseDTO(
-                        key_down, {"change": round(-total_change, 1)}, prio_down
+                        key_down, {"change": str(round(-total_change, 1))}, prio_down
                     )
                 )
     return insights, trended_metrics

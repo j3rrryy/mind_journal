@@ -11,7 +11,7 @@ def generate_feature_importance_recommendations(
         recommendations.append(
             response_dto.ActionItemResponseDTO(
                 Recommendation.FOCUS_ON_SLEEP,
-                {"importance": round(feature_importance.sleep_hours, 2)},
+                {"importance": str(int(feature_importance.sleep_hours * 100))},
                 Priority.MEDIUM,
             )
         )
@@ -19,7 +19,7 @@ def generate_feature_importance_recommendations(
         recommendations.append(
             response_dto.ActionItemResponseDTO(
                 Recommendation.FOCUS_ON_ACTIVITY,
-                {"importance": round(feature_importance.activity, 2)},
+                {"importance": str(int(feature_importance.activity * 100))},
                 Priority.MEDIUM,
             )
         )
@@ -27,7 +27,7 @@ def generate_feature_importance_recommendations(
         recommendations.append(
             response_dto.ActionItemResponseDTO(
                 Recommendation.FOCUS_ON_STRESS,
-                {"importance": round(feature_importance.stress, 2)},
+                {"importance": str(int(feature_importance.stress * 100))},
                 Priority.MEDIUM,
             )
         )
@@ -35,7 +35,7 @@ def generate_feature_importance_recommendations(
         recommendations.append(
             response_dto.ActionItemResponseDTO(
                 Recommendation.FOCUS_ON_ENERGY,
-                {"importance": round(feature_importance.energy, 2)},
+                {"importance": str(int(feature_importance.energy * 100))},
                 Priority.MEDIUM,
             )
         )
@@ -43,7 +43,7 @@ def generate_feature_importance_recommendations(
         recommendations.append(
             response_dto.ActionItemResponseDTO(
                 Recommendation.FOCUS_ON_FOCUS,
-                {"importance": round(feature_importance.focus, 2)},
+                {"importance": str(int(feature_importance.focus * 100))},
                 Priority.MEDIUM,
             )
         )

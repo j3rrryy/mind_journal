@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getRecommendationsAction } from "@/app/actions/wellness";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Card } from "@/components/layout/Card";
 import { LoadingDots } from "@/components/common/LoadingDots";
 import { EmptyState } from "@/components/metrics/EmptyState";
@@ -17,6 +17,7 @@ import type { Recommendations } from "@/types";
 export default function RecommendationsPage() {
   const t = useTranslations("recommendations");
   const tc = useTranslations("common");
+  const locale = useLocale();
 
   const [data, setData] = useState<Recommendations | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,19 +28,7 @@ export default function RecommendationsPage() {
     try {
       const response = await getRecommendationsAction();
       if (response.ok) {
-        const roundedRecommendations = {
-          ...response.data,
-          recommendations: response.data.recommendations.map((rec) => ({
-            ...rec,
-            parameters: Object.fromEntries(
-              Object.entries(rec.parameters).map(([key, value]) => [
-                key,
-                key === "importance" ? Math.round(value * 100) : Math.round(value * 10) / 10,
-              ])
-            ),
-          })),
-        };
-        setData(roundedRecommendations);
+        setData(response.data);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error loading recommendations");
@@ -71,7 +60,7 @@ export default function RecommendationsPage() {
         <>
           {data?.generated_at && (
             <div className="text-sm text-text-secondary">
-              {tc("lastUpdated", { date: formatDate(data.generated_at) })}
+              {tc("lastUpdated", { date: formatDate(data.generated_at, locale) })}
             </div>
           )}
 

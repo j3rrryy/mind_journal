@@ -85,7 +85,7 @@ message AnalyticsResponse {
 
 message ActionItem {
     string key = 1;
-    map<string, float> parameters = 2;
+    map<string, string> parameters = 2;
     string priority = 3;
 }
 
