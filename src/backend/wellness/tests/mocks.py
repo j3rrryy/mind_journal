@@ -17,7 +17,7 @@ ACTIVITY = 3
 STRESS = 9
 ENERGY = 5
 FOCUS = 8
-ACTION_ITEM_PARAMETERS = {"param1": 2.0, "param2": 1.5}
+ACTION_ITEM_PARAMETERS = {"param1": "2.0", "param2": "aaa"}
 
 
 def create_session() -> AsyncSession:

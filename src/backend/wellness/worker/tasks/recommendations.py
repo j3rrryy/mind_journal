@@ -28,5 +28,5 @@ async def generate_recommendations(user_id: str) -> None:
     await cache.set(
         user_recommendations_key(user_id),
         recommendations_dto,
-        Settings.RECOMMENDATIONS_TTL * 1.3,
+        int(Settings.RECOMMENDATIONS_TTL * 1.3),
     )

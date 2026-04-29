@@ -29,14 +29,14 @@ def generate_basic_insights(
         insights.append(
             response_dto.ActionItemResponseDTO(
                 Insight.LOW_MOOD,
-                {"avg": round(avg_mood, 1), "target": 7},
+                {"avg": str(round(avg_mood, 1)), "target": "7"},
                 Priority.HIGH,
             )
         )
     elif avg_mood >= 7:
         insights.append(
             response_dto.ActionItemResponseDTO(
-                Insight.HIGH_MOOD, {"avg": round(avg_mood, 1)}, Priority.LOW
+                Insight.HIGH_MOOD, {"avg": str(round(avg_mood, 1))}, Priority.LOW
             )
         )
 
@@ -44,7 +44,7 @@ def generate_basic_insights(
         insights.append(
             response_dto.ActionItemResponseDTO(
                 Insight.LOW_SLEEP,
-                {"avg": round(avg_sleep, 1), "target": 7.5},
+                {"avg": str(round(avg_sleep, 1)), "target": "7.5"},
                 Priority.HIGH,
             )
         )
@@ -52,7 +52,7 @@ def generate_basic_insights(
         insights.append(
             response_dto.ActionItemResponseDTO(
                 Insight.HIGH_SLEEP,
-                {"avg": round(avg_sleep, 1), "target": 7.5},
+                {"avg": str(round(avg_sleep, 1)), "target": "7.5"},
                 Priority.HIGH,
             )
         )
@@ -69,14 +69,16 @@ def generate_basic_insights(
         insights.append(
             response_dto.ActionItemResponseDTO(
                 Insight.LOW_ACTIVITY,
-                {"avg": round(avg_activity, 1), "target": 7},
+                {"avg": str(round(avg_activity, 1)), "target": "7"},
                 Priority.HIGH,
             )
         )
     elif avg_activity >= 7:
         insights.append(
             response_dto.ActionItemResponseDTO(
-                Insight.HIGH_ACTIVITY, {"avg": round(avg_activity, 1)}, Priority.LOW
+                Insight.HIGH_ACTIVITY,
+                {"avg": str(round(avg_activity, 1))},
+                Priority.LOW,
             )
         )
 
@@ -84,14 +86,14 @@ def generate_basic_insights(
         insights.append(
             response_dto.ActionItemResponseDTO(
                 Insight.HIGH_STRESS,
-                {"avg": round(avg_stress, 1), "target": 4},
+                {"avg": str(round(avg_stress, 1)), "target": "4"},
                 Priority.HIGH,
             )
         )
     elif avg_stress <= 4:
         insights.append(
             response_dto.ActionItemResponseDTO(
-                Insight.LOW_STRESS, {"avg": round(avg_stress, 1)}, Priority.LOW
+                Insight.LOW_STRESS, {"avg": str(round(avg_stress, 1))}, Priority.LOW
             )
         )
 
@@ -99,14 +101,14 @@ def generate_basic_insights(
         insights.append(
             response_dto.ActionItemResponseDTO(
                 Insight.LOW_ENERGY,
-                {"avg": round(avg_energy, 1), "target": 7},
+                {"avg": str(round(avg_energy, 1)), "target": "7"},
                 Priority.HIGH,
             )
         )
     elif avg_energy >= 7:
         insights.append(
             response_dto.ActionItemResponseDTO(
-                Insight.HIGH_ENERGY, {"avg": round(avg_energy, 1)}, Priority.LOW
+                Insight.HIGH_ENERGY, {"avg": str(round(avg_energy, 1))}, Priority.LOW
             )
         )
 
@@ -114,14 +116,14 @@ def generate_basic_insights(
         insights.append(
             response_dto.ActionItemResponseDTO(
                 Insight.LOW_FOCUS,
-                {"avg": round(avg_focus, 1), "target": 7},
+                {"avg": str(round(avg_focus, 1)), "target": "7"},
                 Priority.HIGH,
             )
         )
     elif avg_focus >= 7:
         insights.append(
             response_dto.ActionItemResponseDTO(
-                Insight.HIGH_FOCUS, {"avg": round(avg_focus, 1)}, Priority.LOW
+                Insight.HIGH_FOCUS, {"avg": str(round(avg_focus, 1))}, Priority.LOW
             )
         )
 

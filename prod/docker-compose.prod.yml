@@ -142,7 +142,7 @@ services:
     depends_on:
       - wellness_postgres
       - wellness_redis
-    command: [ "sh", "-c", "uv run alembic upgrade head && uv run dramatiq worker.worker --processes 1" ]
+    command: [ "sh", "-c", "uv run alembic upgrade head && uv run dramatiq worker.worker --processes 3" ]
     container_name: wellness_worker_prod
 
   wellness_postgres:

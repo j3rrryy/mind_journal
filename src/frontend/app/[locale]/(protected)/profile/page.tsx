@@ -253,7 +253,9 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm text-text-secondary">{t("registeredAt")}</p>
-                <p className="text-lg text-text-primary">{formatDate(user.registered_at)}</p>
+                <p className="text-lg text-text-primary">
+                  {formatDate(user.registered_at, locale)}
+                </p>
               </div>
             </div>
           </SectionCard>

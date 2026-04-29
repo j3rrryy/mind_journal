@@ -74,7 +74,7 @@ class FeatureImportanceResponseDTO(BaseResponseDTO):
 @dataclass(slots=True, frozen=True)
 class ActionItemResponseDTO(BaseResponseDTO):
     key: Insight | Recommendation
-    parameters: dict[str, float]
+    parameters: dict[str, str]
     priority: Priority
 
     def to_response(self, message: type[GrpcMessage]) -> GrpcMessage:

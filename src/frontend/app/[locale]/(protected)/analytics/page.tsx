@@ -17,7 +17,7 @@ import type { Period } from "@/lib/constants/period";
 import type { MetricKey } from "@/lib/constants/metrics";
 import { METRIC_LABELS } from "@/lib/constants/metrics";
 import type { PeriodAnalytics } from "@/types";
-import { formatDate } from "@/lib/utils/date";
+import { formatDate, formatDateShort } from "@/lib/utils/date";
 
 export default function AnalyticsPage() {
   const t = useTranslations("analytics");
@@ -34,26 +34,27 @@ export default function AnalyticsPage() {
     try {
       const response = await getAnalyticsAction();
       if (response.ok) {
-        const roundedAnalytics = response.data.analytics.map((period) => ({
+        const processedAnalytics = response.data.analytics.map((period) => ({
           ...period,
-          insights: period.insights.map((insight) => ({
-            ...insight,
-            parameters: Object.fromEntries(
-              Object.entries(insight.parameters).map(([key, value]) => [
-                key,
-                Math.round(value * 10) / 10,
-              ])
-            ),
-          })),
+          insights: period.insights.map((insight) => {
+            const params = { ...insight.parameters };
+            if (params.start_date) {
+              params.start_date = formatDateShort(params.start_date, locale);
+            }
+            if (params.end_date) {
+              params.end_date = formatDateShort(params.end_date, locale);
+            }
+            return { ...insight, parameters: params };
+          }),
         }));
-        setAnalytics(roundedAnalytics);
+        setAnalytics(processedAnalytics);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error loading analytics");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     fetchAnalytics();
@@ -98,7 +99,7 @@ export default function AnalyticsPage() {
 
           {currentAnalytics?.generated_at && (
             <div className="text-sm text-text-secondary">
-              {tc("lastUpdated", { date: formatDate(currentAnalytics.generated_at) })}
+              {tc("lastUpdated", { date: formatDate(currentAnalytics.generated_at, locale) })}
             </div>
           )}
 

@@ -3,8 +3,8 @@ from enums import Insight, Priority, Recommendation
 
 
 def generate_mood_recommendations(
-    week_insights: dict[Insight, dict[str, float]],
-    month_insights: dict[Insight, dict[str, float]],
+    week_insights: dict[Insight, dict[str, str]],
+    month_insights: dict[Insight, dict[str, str]],
 ) -> list[response_dto.ActionItemResponseDTO]:
     recommendations = []
 

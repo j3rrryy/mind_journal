@@ -231,21 +231,21 @@ class ActionItem(_message.Message):
         KEY_FIELD_NUMBER: _ClassVar[int]
         VALUE_FIELD_NUMBER: _ClassVar[int]
         key: str
-        value: float
+        value: str
         def __init__(
-            self, key: _Optional[str] = ..., value: _Optional[float] = ...
+            self, key: _Optional[str] = ..., value: _Optional[str] = ...
         ) -> None: ...
 
     KEY_FIELD_NUMBER: _ClassVar[int]
     PARAMETERS_FIELD_NUMBER: _ClassVar[int]
     PRIORITY_FIELD_NUMBER: _ClassVar[int]
     key: str
-    parameters: _containers.ScalarMap[str, float]
+    parameters: _containers.ScalarMap[str, str]
     priority: str
     def __init__(
         self,
         key: _Optional[str] = ...,
-        parameters: _Optional[_Mapping[str, float]] = ...,
+        parameters: _Optional[_Mapping[str, str]] = ...,
         priority: _Optional[str] = ...,
     ) -> None: ...
 
