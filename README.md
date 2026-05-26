@@ -40,6 +40,8 @@
 - Мониторинг - Prometheus & Grafana
 - Агрегация логов - Promtail & Loki & Grafana
 
+![Architecture](https://github.com/j3rrryy/mind_journal/blob/main/images/architecture.webp?raw=true)
+
 > [!NOTE]
 > Grafana находится по адресу `/admin/grafana`
 
