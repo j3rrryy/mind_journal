@@ -52,7 +52,7 @@
 
 ## :hammer_and_wrench: Начало работы
 
-- **(Для dev-docker)** Скопируйте файл `.env` из `examples/` в папку `docker/` и заполните его
+- **(Для dev-docker)** Скопируйте файлы `.env` и `.env.frontend` из `examples/` в папку `docker/` и заполните их
 
 - **(Для dev-docker)** Скопируйте файл `redis.conf` из `examples/` в папку `docker/` и заполните его
 
