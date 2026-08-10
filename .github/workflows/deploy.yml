@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [ gateway, auth, wellness, mail ]
+        service: [gateway, auth, wellness, mail]
     env:
       TAG: ${{ github.ref_name }}
     steps:
@@ -63,16 +63,28 @@ jobs:
       - build_frontend
       - build_backend
     steps:
-      - name: Deploy the app
-        uses: appleboy/ssh-action@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v5
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSHKEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            echo "${{ secrets.PASSWORD }}" | sudo -S sh -c "
-            cd mind_journal &&
-            docker compose -f docker-compose.prod.yml up frontend gateway auth wellness mail --force-recreate -d &&
-            docker image prune -f
-            "
+          version: "latest"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v5
+        with:
+          version: "latest"
+
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install mind-journal ./k8s -f ./k8s/values-prod.yaml --namespace mind-journal --create-namespace
+          kubectl rollout restart deployment -n mind-journal
+
+      - name: Verify deployment
+        run: kubectl rollout status deployment -n mind-journal --timeout=5m
