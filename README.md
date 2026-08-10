@@ -47,17 +47,44 @@
 
 ## :computer: Что нужно для запуска
 
-- Docker
+- Docker **(dev)**
+- Kubernetes + Helm **(dev + prod)**
 
 ## :hammer_and_wrench: Начало работы
 
-- **(Для dev/prod)** Скопируйте файл `.env` из `examples/<dev/prod>/` в папку `<dev/prod>/` и заполните его (для быстроты можно использовать значения из `test/.env`)
+- **(Для dev-docker)** Скопируйте файл `.env` из `examples/` в папку `docker/` и заполните его
 
-- **(Для dev/prod)** Скопируйте файл `redis.conf` из `examples/` в папку `<dev/prod>/` и заполните его
+- **(Для dev-docker)** Скопируйте файл `redis.conf` из `examples/` в папку `docker/` и заполните его
 
-- **(Для prod)** Скопируйте файл `nginx.conf` из `examples/prod/` в папку `prod/` и заполните его
+- **(Для dev-k8s/prod-k8s)** Скопируйте файл `values-<dev/prod>.yaml` из `examples/` в папку `k8s/` и заполните его
 
-- **(Для prod)** Скопируйте файл `docker-compose.cert.yml` из `examples/prod/` в папку `prod/` и заполните его
+- **(Для k8s)** Установите NGINX Ingress Controller
+
+  ```shell
+  helm install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace --set controller.allowSnippetAnnotations=true --set controller.config.annotations-risk-level=Critical
+  ```
+
+- **(Для prod-k8s)** Установите cert-manager и сконфигурируйте ClusterIssuer
+
+  ```shell
+  helm install cert-manager jetstack/cert-manager --repo https://charts.jetstack.io --namespace cert-manager --create-namespace --set installCRDs=true
+  kubectl apply -f - <<EOF
+  apiVersion: cert-manager.io/v1
+  kind: ClusterIssuer
+  metadata:
+    name: letsencrypt-prod
+  spec:
+    acme:
+      server: https://acme-v02.api.letsencrypt.org/directory
+      email: <your_email>
+      privateKeySecretRef:
+        name: letsencrypt-prod
+      solvers:
+        - http01:
+            ingress:
+              class: nginx
+  EOF
+  ```
 
 ### :rocket: Запуск
 
@@ -66,44 +93,46 @@
   - Только приложение
 
     ```shell
-    docker compose -f docker-compose.dev.yml --profile app up --build -d
+    docker compose --profile app up --build -d
     ```
 
   - Приложение + мониторинг
 
     ```shell
-    docker compose -f docker-compose.dev.yml --profile all up --build -d
+    docker compose --profile all up --build -d
     ```
 
-- Запуск **prod-версии** и получение SSL-сертификата
-
-  - Создайте директорию на сервере
+  - Используя Kubernetes
 
     ```shell
-    mkdir -p /mind_journal/
+    helm dependency update ./k8s
+    helm upgrade --install mind-journal ./k8s -f ./k8s/values-dev.yaml --namespace mind-journal --create-namespace
     ```
 
-  - Используйте SCP, чтобы скопировать prod-файлы на сервер
+- Запуск **prod-версии**
 
-    ```shell
-    scp -r ./prod/* <username>@<host>:/mind_journal/
-    ```
-
-  - Запустите deploy-скрипт
-
-    ```shell
-    bash deploy.sh
-    ```
+  ```shell
+  helm dependency update ./k8s
+  helm upgrade --install mind-journal ./k8s -f ./k8s/values-prod.yaml --namespace mind-journal --create-namespace
+  ```
 
 ### :x: Остановка
 
-```shell
-docker compose -f docker-compose.<dev/prod>.yml stop
-```
+- Используя Docker
+
+  ```shell
+  docker compose stop
+  ```
+
+- Используя Kubernetes
+
+  ```shell
+  helm uninstall mind-journal --namespace mind-journal
+  ```
 
 ### :bar_chart: Демо
 
-- Запустите **dev-версию** с переменными окружения `WORKER_DEBUG=1` и `DEBUG=0` (это увеличит частоту обновления аналитики и рекомендаций)
+- Запустите **dev-docker-версию** с переменными окружения `WORKER_DEBUG=1` и `DEBUG=0` (это увеличит частоту обновления аналитики и рекомендаций)
 - Создайте аккаунт
 - Скопируйте ID пользователя из профиля
 - Сгенерируйте данные:
