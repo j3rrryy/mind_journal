@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mind-journal.wellness.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: wellness
+    {{- include "mind-journal.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: wellness
+  ports:
+  - name: grpc
+    port: {{ .Values.wellness.service.grpcPort }}
+    targetPort: grpc
+  - name: http
+    port: {{ .Values.wellness.service.httpPort }}
+    targetPort: http
+  type: ClusterIP
