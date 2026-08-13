@@ -173,7 +173,7 @@ mail:
       cpu: "1"
   env:
     APP_NAME: MindJournal
-    EMAIL_CONFIRMATION_URL: "https://<url>/api/v1/auth/confirm-email?token="
+    EMAIL_CONFIRMATION_URL: https://<url>/auth/confirm-email?token=
 
 kafka:
   controller:

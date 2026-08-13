@@ -20,6 +20,10 @@ spec:
       - name: wellness-worker
         image: "{{ .Values.global.image.repository }}:{{ .Values.wellness.image.tag }}"
         imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+        command:
+          - sh
+          - -c
+          - uv run alembic upgrade head && uv run dramatiq worker.worker --processes 1
         ports:
         - containerPort: {{ (index .Values "wellness-worker").service.httpPort }}
           name: http
