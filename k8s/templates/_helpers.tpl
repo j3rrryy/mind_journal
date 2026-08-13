@@ -6,12 +6,20 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "mind-journal.frontend.fullname" -}}
+{{- printf "%s-frontend" .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
 {{- define "mind-journal.auth.fullname" -}}
 {{- printf "%s-auth" .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{- define "mind-journal.wellness.fullname" -}}
 {{- printf "%s-wellness" .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{- define "mind-journal.wellness-worker.fullname" -}}
+{{- printf "%s-wellness-worker" .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{- define "mind-journal.gateway.fullname" -}}

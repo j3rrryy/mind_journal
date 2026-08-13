@@ -41,6 +41,14 @@ wellness:
     REDIS_DB: "0"
     REDIS_USER: default
 
+wellness-worker:
+  env:
+    WORKER_DEBUG: "1"
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
 wellness-postgres:
   settings:
     superuserPassword:

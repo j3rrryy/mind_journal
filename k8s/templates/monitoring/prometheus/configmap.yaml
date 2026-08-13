@@ -1,8 +1,10 @@
 {{- if .Values.monitoring.enabled }}
 {{- $prometheusName := include "mind-journal.prometheus.fullname" . -}}
+{{- $frontendName := include "mind-journal.frontend.fullname" . -}}
 {{- $gatewayName := include "mind-journal.gateway.fullname" . -}}
 {{- $authName := include "mind-journal.auth.fullname" . -}}
 {{- $wellnessName := include "mind-journal.wellness.fullname" . -}}
+{{- $wellnessWorkerName := include "mind-journal.wellness-worker.fullname" . -}}
 {{- $mailName := include "mind-journal.mail.fullname" . -}}
 {{- $lokiName := include "mind-journal.loki.fullname" . -}}
 {{- $promtailName := include "mind-journal.promtail.fullname" . -}}
@@ -20,6 +22,10 @@ data:
       scrape_interval: 15s
       scrape_timeout: 10s
     scrape_configs:
+      - job_name: frontend
+        metrics_path: /api/metrics
+        static_configs:
+          - targets: ["{{ $frontendName }}:{{ .Values.frontend.service.httpPort }}"]
       - job_name: gateway
         metrics_path: /api/metrics
         static_configs:
@@ -32,6 +38,10 @@ data:
         metrics_path: /metrics
         static_configs:
           - targets: ["{{ $wellnessName }}:{{ .Values.wellness.service.httpPort }}"]
+      - job_name: wellness-worker
+        metrics_path: /metrics
+        static_configs:
+          - targets: ["{{ $wellnessWorkerName }}:{{ .Values.wellnessWorker.service.httpPort }}"]
       - job_name: mail
         metrics_path: /metrics
         static_configs:

@@ -97,6 +97,22 @@ wellness:
     REDIS_DB: "0"
     REDIS_USER: default
 
+wellness-worker:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    WORKER_DEBUG: "0"
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
 wellness-postgres:
   settings:
     superuserPassword:

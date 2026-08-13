@@ -94,6 +94,18 @@ wellness:
       memory: 512Mi
       cpu: 500m
 
+wellness-worker:
+  replicaCount: 1
+  service:
+    httpPort: 8000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
 wellness-postgres:
   image:
     repository: postgres

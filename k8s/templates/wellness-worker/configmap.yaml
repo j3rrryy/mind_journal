@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "mind-journal.wellness.fullname" . }}-config
+  name: {{ include "mind-journal.wellness-worker.fullname" . }}-config
   namespace: {{ .Release.Namespace }}
   labels:
-    app: wellness
+    app: wellness-worker
     {{- include "mind-journal.labels" . | nindent 4 }}
 data:
-  {{- range $key, $val := .Values.wellness.env }}
+  {{- range $key, $val := .Values.wellnessWorker.env }}
   {{ $key }}: {{ $val | quote }}
   {{- end }}
   POSTGRES_HOST: {{ .Release.Name }}-wellness-postgres

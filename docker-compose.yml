@@ -9,14 +9,12 @@ volumes:
   prometheus_data:
   grafana_data:
 
-
 networks:
   nginx:
   backend:
   auth:
   wellness:
   monitoring:
-
 
 services:
   nginx-api:
