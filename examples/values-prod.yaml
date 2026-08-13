@@ -1,0 +1,202 @@
+environment: prod
+
+monitoring:
+  enabled: true
+
+ingress:
+  host: <url>
+  tls:
+    enabled: true
+    secretName: mind-journal-tls
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+
+frontend:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    ALLOWED_ORIGINS: <origin>,<origin>
+
+gateway:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    APP_NAME: MindJournal
+    VERSION: "1.0.0"
+    DEBUG: "0"
+
+auth:
+  replicaCount: 2
+  image:
+    tag: auth-latest
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    APP_NAME: MindJournal
+    DEBUG: "0"
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
+auth-postgres:
+  settings:
+    superuserPassword:
+      value: "<password>"
+  userDatabase:
+    name:
+      value: mind_journal
+    user:
+      value: <username>
+    password:
+      value: "<password>"
+  persistence:
+    size: 10Gi
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 500m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+
+auth-redis:
+  redisConfig: |
+    requirepass <password>
+    protected-mode no
+  auth:
+    password: "<password>"
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+wellness:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    WORKER_DEBUG: "0"
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
+wellness-worker:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    WORKER_DEBUG: "0"
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
+wellness-postgres:
+  settings:
+    superuserPassword:
+      value: "<password>"
+  userDatabase:
+    name:
+      value: mind_journal
+    user:
+      value: <username>
+    password:
+      value: "<password>"
+  persistence:
+    size: 20Gi
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 500m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+
+wellness-redis:
+  redisConfig: |
+    requirepass <password>
+    protected-mode no
+  auth:
+    password: "<password>"
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+mail:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    APP_NAME: MindJournal
+    EMAIL_CONFIRMATION_URL: https://<url>/auth/confirm-email?token=
+
+kafka:
+  controller:
+    persistence:
+      size: 10Gi
+
+prometheus:
+  storage: 5Gi
+
+loki:
+  storage: 25Gi
+
+grafana:
+  storage: 5Gi
+
+secrets:
+  auth:
+    SECRET_KEY: "<Base64-encoded PEM EdDSA key>"
+  mail:
+    MAIL_USERNAME: "<username>"
+    MAIL_PASSWORD: "<password>"
+    MAIL_HOSTNAME: "<hostname>"
+    MAIL_PORT: "<port>"
+  grafana:
+    GF_SECURITY_ADMIN_USER: <username>
+    GF_SECURITY_ADMIN_PASSWORD: "<password>"

@@ -1,0 +1,52 @@
+{{- if .Values.ingress.enabled }}
+{{- $frontendName := include "mind-journal.frontend.fullname" . -}}
+{{- $grafanaName := include "mind-journal.grafana.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "mind-journal.labels" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location /api {
+        deny all;
+        return 403;
+      }
+      {{- if .Values.monitoring.enabled }}
+      location /admin/grafana {
+        proxy_set_header Host $http_host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_redirect off;
+        proxy_pass http://{{ $grafanaName }}.{{ .Release.Namespace }}:{{ .Values.grafana.service.port }};
+      }
+      {{- end }}
+    {{- if .Values.monitoring.enabled }}
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    {{- end }}
+    {{- range $key, $val := .Values.ingress.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+  rules:
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ $frontendName }}
+            port:
+              number: {{ .Values.frontend.service.httpPort }}
+{{- end }}

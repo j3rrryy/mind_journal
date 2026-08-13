@@ -1,0 +1,19 @@
+{{- if .Values.monitoring.enabled }}
+{{- $lokiName := include "mind-journal.loki.fullname" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $lokiName }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: loki
+    {{- include "mind-journal.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: loki
+  ports:
+  - name: http
+    port: 3100
+    targetPort: http
+  type: ClusterIP
+{{- end }}
