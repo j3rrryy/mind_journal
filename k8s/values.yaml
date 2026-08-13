@@ -1,0 +1,235 @@
+environment: dev
+
+global:
+  security:
+    allowInsecureImages: true
+  image:
+    repository: ghcr.io/j3rrryy/mind_journal
+    pullPolicy: Always
+
+monitoring:
+  enabled: false
+
+ingress:
+  enabled: true
+  className: nginx
+  host: localhost
+  annotations: {}
+  tls:
+    enabled: false
+    secretName: mind-journal-tls
+
+frontend:
+  replicaCount: 1
+  image:
+    tag: frontend-latest
+  service:
+    httpPort: 3000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+gateway:
+  replicaCount: 1
+  image:
+    tag: gateway-latest
+  service:
+    httpPort: 8000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+auth:
+  replicaCount: 1
+  image:
+    tag: auth-latest
+  service:
+    grpcPort: 50051
+    httpPort: 8000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+auth-postgres:
+  image:
+    repository: postgres
+    tag: 17.5-alpine
+  persistence:
+    size: 1Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  env:
+    - name: PGUSER
+      value: postgres
+
+auth-redis:
+  image:
+    repository: redis
+    tag: 8.2-alpine
+  persistence:
+    size: 1Gi
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 200m
+
+wellness:
+  replicaCount: 1
+  image:
+    tag: wellness-latest
+  service:
+    grpcPort: 50051
+    httpPort: 8000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+wellness-worker:
+  replicaCount: 1
+  service:
+    httpPort: 8000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+wellness-postgres:
+  image:
+    repository: postgres
+    tag: 17.5-alpine
+  persistence:
+    size: 1Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+  env:
+    - name: PGUSER
+      value: postgres
+
+wellness-redis:
+  image:
+    repository: redis
+    tag: 8.2-alpine
+  persistence:
+    size: 1Gi
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 200m
+
+mail:
+  replicaCount: 1
+  image:
+    tag: mail-latest
+  service:
+    httpPort: 8000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+kafka:
+  image:
+    repository: bitnamilegacy/kafka
+    tag: 4.0.0-debian-12-r10
+  listeners:
+    client:
+      protocol: PLAINTEXT
+    controller:
+      protocol: PLAINTEXT
+    interbroker:
+      protocol: PLAINTEXT
+  controller:
+    persistence:
+      size: 1Gi
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: 250m
+      limits:
+        memory: 1Gi
+        cpu: 500m
+
+prometheus:
+  image: prom/prometheus:v3.5.0
+  storage: 1Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 250m
+
+loki:
+  image: grafana/loki:3.5
+  storage: 5Gi
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 250m
+
+promtail:
+  image: grafana/promtail:3.5
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 256Mi
+      cpu: 200m
+
+grafana:
+  image: grafana/grafana:12.1.1
+  storage: 1Gi
+  service:
+    port: 3000
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 250m
+  env:
+    GF_SERVER_SERVE_FROM_SUB_PATH: "true"
