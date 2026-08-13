@@ -1,0 +1,19 @@
+{{- if .Values.monitoring.enabled }}
+{{- $promtailName := include "mind-journal.promtail.fullname" . -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $promtailName }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: promtail
+    {{- include "mind-journal.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: promtail
+  ports:
+  - name: http
+    port: 9080
+    targetPort: http
+  type: ClusterIP
+{{- end }}

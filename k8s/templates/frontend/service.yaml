@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mind-journal.frontend.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: frontend
+    {{- include "mind-journal.labels" . | nindent 4 }}
+spec:
+  selector:
+    app: frontend
+  ports:
+  - name: http
+    port: {{ .Values.frontend.service.httpPort }}
+    targetPort: http
+  type: ClusterIP

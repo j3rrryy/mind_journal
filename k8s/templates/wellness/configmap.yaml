@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mind-journal.wellness.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: wellness
+    {{- include "mind-journal.labels" . | nindent 4 }}
+data:
+  {{- range $key, $val := .Values.wellness.env }}
+  {{ $key }}: {{ $val | quote }}
+  {{- end }}
+  POSTGRES_HOST: {{ .Release.Name }}-wellness-postgres
+  POSTGRES_PORT: "5432"
+  REDIS_HOST: {{ .Release.Name }}-wellness-redis
+  REDIS_PORT: "6379"

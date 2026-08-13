@@ -1,0 +1,32 @@
+apiVersion: v2
+name: mind-journal
+description: MindJournal app
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: postgres
+    alias: auth-postgres
+    version: 1.5.7
+    repository: https://groundhog2k.github.io/helm-charts
+    condition: auth-postgres.enabled
+  - name: postgres
+    alias: wellness-postgres
+    version: 1.5.7
+    repository: https://groundhog2k.github.io/helm-charts
+    condition: wellness-postgres.enabled
+  - name: redis
+    alias: auth-redis
+    version: 2.1.12
+    repository: https://groundhog2k.github.io/helm-charts
+    condition: auth-redis.enabled
+  - name: redis
+    alias: wellness-redis
+    version: 2.1.12
+    repository: https://groundhog2k.github.io/helm-charts
+    condition: wellness-redis.enabled
+  - name: kafka
+    version: 32.4.3
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: kafka.enabled

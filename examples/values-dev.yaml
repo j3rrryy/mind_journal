@@ -1,0 +1,90 @@
+environment: dev
+
+frontend:
+  env:
+    ALLOWED_ORIGINS: localhost
+
+gateway:
+  env:
+    APP_NAME: MindJournal
+    VERSION: "1.0.0"
+    DEBUG: "1"
+
+auth:
+  env:
+    APP_NAME: MindJournal
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
+auth-postgres:
+  settings:
+    superuserPassword:
+      value: "<password>"
+  userDatabase:
+    name:
+      value: mind_journal
+    user:
+      value: <username>
+    password:
+      value: "<password>"
+
+auth-redis:
+  redisConfig: |
+    requirepass <password>
+    protected-mode no
+  auth:
+    password: "<password>"
+
+wellness:
+  env:
+    WORKER_DEBUG: "1"
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
+wellness-worker:
+  env:
+    WORKER_DEBUG: "1"
+    POSTGRES_DB: mind_journal
+    POSTGRES_USER: <username>
+    REDIS_DB: "0"
+    REDIS_USER: default
+
+wellness-postgres:
+  settings:
+    superuserPassword:
+      value: "<password>"
+  userDatabase:
+    name:
+      value: mind_journal
+    user:
+      value: <username>
+    password:
+      value: "<password>"
+
+wellness-redis:
+  redisConfig: |
+    requirepass <password>
+    protected-mode no
+  auth:
+    password: "<password>"
+
+mail:
+  env:
+    APP_NAME: MindJournal
+    EMAIL_CONFIRMATION_URL: http://localhost/auth/confirm-email?token=
+
+secrets:
+  auth:
+    SECRET_KEY: "<Base64-encoded PEM EdDSA key>"
+  mail:
+    MAIL_USERNAME: "<username>"
+    MAIL_PASSWORD: "<password>"
+    MAIL_HOSTNAME: "<hostname>"
+    MAIL_PORT: "<port>"
+  grafana:
+    GF_SECURITY_ADMIN_USER: <username>
+    GF_SECURITY_ADMIN_PASSWORD: "<password>"
