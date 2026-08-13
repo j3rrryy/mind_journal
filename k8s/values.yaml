@@ -19,6 +19,20 @@ ingress:
     enabled: false
     secretName: mind-journal-tls
 
+frontend:
+  replicaCount: 1
+  image:
+    tag: frontend-latest
+  service:
+    httpPort: 3000
+  resources:
+    requests:
+      memory: 128Mi
+      cpu: 100m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
 gateway:
   replicaCount: 1
   image:

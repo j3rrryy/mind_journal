@@ -1,5 +1,5 @@
 {{- if .Values.ingress.enabled }}
-{{- $gatewayName := include "mind-journal.gateway.fullname" . -}}
+{{- $frontendName := include "mind-journal.frontend.fullname" . -}}
 {{- $grafanaName := include "mind-journal.grafana.fullname" . -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -42,11 +42,11 @@ spec:
   - host: {{ .Values.ingress.host }}
     http:
       paths:
-      - path: /api
+      - path: /
         pathType: Prefix
         backend:
           service:
-            name: {{ $gatewayName }}
+            name: {{ $frontendName }}
             port:
-              number: {{ .Values.gateway.service.httpPort }}
+              number: {{ .Values.frontend.service.httpPort }}
 {{- end }}

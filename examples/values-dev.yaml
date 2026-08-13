@@ -1,5 +1,9 @@
 environment: dev
 
+frontend:
+  env:
+    ALLOWED_ORIGINS: localhost
+
 gateway:
   env:
     APP_NAME: MindJournal

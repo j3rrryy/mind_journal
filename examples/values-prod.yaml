@@ -11,6 +11,18 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
 
+frontend:
+  replicaCount: 2
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: "1"
+  env:
+    ALLOWED_ORIGINS: <origin>,<origin>
+
 gateway:
   replicaCount: 2
   resources:

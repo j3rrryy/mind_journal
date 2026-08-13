@@ -41,7 +41,7 @@ data:
       - job_name: wellness-worker
         metrics_path: /metrics
         static_configs:
-          - targets: ["{{ $wellnessWorkerName }}:{{ .Values.wellnessWorker.service.httpPort }}"]
+          - targets: ["{{ $wellnessWorkerName }}:{{ (index .Values "wellness-worker").service.httpPort }}"]
       - job_name: mail
         metrics_path: /metrics
         static_configs:

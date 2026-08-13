@@ -7,7 +7,7 @@ metadata:
     app: wellness-worker
     {{- include "mind-journal.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.wellnessWorker.replicaCount }}
+  replicas: {{ (index .Values "wellness-worker").replicaCount }}
   selector:
     matchLabels:
       app: wellness-worker
@@ -21,7 +21,7 @@ spec:
         image: "{{ .Values.global.image.repository }}:{{ .Values.wellness.image.tag }}"
         imagePullPolicy: {{ .Values.global.image.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.wellnessWorker.service.httpPort }}
+        - containerPort: {{ (index .Values "wellness-worker").service.httpPort }}
           name: http
         envFrom:
         - configMapRef:
@@ -56,4 +56,4 @@ spec:
           failureThreshold: 3
           periodSeconds: 5
         resources:
-          {{- toYaml .Values.wellnessWorker.resources | nindent 10 }}
+          {{- toYaml (index .Values "wellness-worker").resources | nindent 10 }}

@@ -7,7 +7,7 @@ metadata:
     app: wellness-worker
     {{- include "mind-journal.labels" . | nindent 4 }}
 data:
-  {{- range $key, $val := .Values.wellnessWorker.env }}
+  {{- range $key, $val := (index .Values "wellness-worker").env }}
   {{ $key }}: {{ $val | quote }}
   {{- end }}
   POSTGRES_HOST: {{ .Release.Name }}-wellness-postgres
